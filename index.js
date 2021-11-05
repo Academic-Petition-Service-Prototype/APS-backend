@@ -1,16 +1,21 @@
 const mysql = require('mysql');
 const express = require('express');
-const connection = require('./connectdatabase');
+const cors = require('cors');
+const db = require('./lib/connectdatabase');
+const router = require('./routes/router');
+const PORT = process.env.PORT || 3000;
 
 var app = express();
+app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+app.use('/api', router);
 
 // Listen port
-app.listen(3000,() => console.log('Express server is running at port No.: 3000'));
+app.listen(PORT,() => console.log('Express server is running on port : ' + PORT));
 
 // Get all users
 app.get('/users',(req, res) => {
-    connection.query('SELECT * FROM users',(err, rows, fields) => {
+    db.query('SELECT * FROM users',(err, rows, fields) => {
         if(!err){
             res.send(rows);
         } else {
@@ -22,7 +27,7 @@ app.get('/users',(req, res) => {
 // Get user by id
 app.get('/users/:id',(req, res) => {
     let id = req.params.id;
-    connection.query('SELECT * FROM users WHERE id = ?',[req.params.id],(err, rows, fields) => {
+    db.query('SELECT * FROM users WHERE id = ?',[req.params.id],(err, rows, fields) => {
         if(rows.length <= 0){
             res.send('User not found with id = ' + id)
         } else {
@@ -66,7 +71,7 @@ app.post('/users/:id', (req, res, next) => {
             group_id : group_id
         }
         // update query
-        connection.query('UPDATE users SET ? WHERE id = ' + id, form_data, (err,result) => {
+        db.query('UPDATE users SET ? WHERE id = ' + id, form_data, (err,result) => {
             if (err) {
                 res.send('Update Error!', err);
             } else {
@@ -79,7 +84,7 @@ app.post('/users/:id', (req, res, next) => {
 
 // Delete user by id
 app.delete('/users/:id',(req, res) => {
-    connection.query('DELETE FROM users WHERE id = ?',[req.params.id],(err, rows, fields) => {
+    db.query('DELETE FROM users WHERE id = ?',[req.params.id],(err, rows, fields) => {
         if(!err){
             res.send('Deleted user successful');
         } else {
@@ -109,7 +114,7 @@ app.post('/users',(req, res) => {
             group_id : group_id
         }
         
-        connection.query('INSERT INTO users SET ?',[form_data],(err, result) => {
+        db.query('INSERT INTO users SET ?',[form_data],(err, result) => {
             if(!err){
                 res.send('Add user successful');
             } else {
