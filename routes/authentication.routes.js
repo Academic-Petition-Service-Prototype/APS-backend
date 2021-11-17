@@ -1,15 +1,20 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const uuid = require('uuid');
 
+// Database
 const db = require('../lib/connectdatabase.js');
-const userMiddleware = require('../middleware/users.js');
+
+// middleware
+const verifyToken = require('../middleware/authentication.middleware');
+const validateResgister = require('../middleware/validateResgister.middleware');
 
 // http://localhost:3000/api/sign-up
-router.post("/sign-up",userMiddleware.validateResgister,(req,res,next) => {
-    db.query(`SELECT id FROM users WHERE LOWER(username) = LOWER(${req.body.username})`, (err,result) => {
+router.post("/sign-up", validateResgister, (req,res,next) => {
+    db.query(
+    `SELECT id FROM users WHERE LOWER(username) = LOWER(${db.escape(req.body.username)})`, 
+    (err, result) => {
         if(result && result.length) { 
             //error
             return res.status(409).send({
@@ -23,7 +28,7 @@ router.post("/sign-up",userMiddleware.validateResgister,(req,res,next) => {
                         message: err,
                     });
                 } else {
-                    db.query(`INSERT INTO users (id, username, password, registered) VALUES ('${uuid.v4()}',${db.escape(req.body.username)},'${hash}',now());`,(err,result) => {
+                    db.query(`INSERT INTO users (id, username, password, status, registered) VALUES ('${uuid.v4()}',${db.escape(req.body.username)},'${hash}',${db.escape(req.body.status)},now());`,(err,result) => {
                         if(err){
                             throw err;
                             return res.status(400).send({
@@ -78,7 +83,7 @@ router.post("/login",(req,res,next) => {
                     user:result[0]
                 })
             }
-            return res.status(400).send({
+            return res.status(401).json({
                 message: "Username or password incorrect!"
             })
         });
@@ -86,7 +91,7 @@ router.post("/login",(req,res,next) => {
 });
 
 // http://localhost:3000/api/secret-route
-router.get("/secret-route",userMiddleware.isLoggedIn,(req,res,next) => {
+router.get("/secret-route",verifyToken,(req,res,next) => {
     console.log(req.userData);
     res.send("This is secret content!");
 })
