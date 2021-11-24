@@ -4,6 +4,7 @@ const cors = require('cors');
 //import routes
 const authentication = require('./routes/authentication.routes');
 const users = require('./routes/users.routes');
+const groups = require('./routes/groups.routes');
 
 // middleware
 const verifyToken = require('./middleware/authentication.middleware');
@@ -19,6 +20,8 @@ app.use(cors());
 
 // Router
 app.use('/api', authentication);
-app.use('/api/users', verifyToken,users);
+// app.use('/api/users', verifyToken,users);
+app.use('/api',users);
+app.use('/api',groups);
 
 module.exports = app;

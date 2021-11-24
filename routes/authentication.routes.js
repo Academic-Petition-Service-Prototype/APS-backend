@@ -28,7 +28,7 @@ router.post("/sign-up", validateResgister, (req,res,next) => {
                         message: err,
                     });
                 } else {
-                    db.query(`INSERT INTO users (id, username, password, status, registered) VALUES ('${uuid.v4()}',${db.escape(req.body.username)},'${hash}',${db.escape(req.body.status)},now());`,(err,result) => {
+                    db.query(`INSERT INTO users (username, password, status, registered) VALUES (${db.escape(req.body.username)},'${hash}',${db.escape(req.body.status)},now());`,(err,result) => {
                         if(err){
                             throw err;
                             return res.status(400).send({

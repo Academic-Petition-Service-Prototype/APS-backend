@@ -7,6 +7,8 @@ const db = require('../lib/connectdatabase');
 // Get all users
 router.get('/users',(req, res) => {
     db.query('SELECT * FROM users',(err, rows, fields) => {
+        console.log(rows);
+
         if(!err){
             res.send(rows);
         } else {
@@ -15,7 +17,7 @@ router.get('/users',(req, res) => {
     })
 })
 
-// Get user by id
+// Get users by id
 router.get('/users/:id',(req, res) => {
     let id = req.params.id;
     db.query('SELECT * FROM users WHERE id = ?',[req.params.id],(err, rows, fields) => {
@@ -27,7 +29,7 @@ router.get('/users/:id',(req, res) => {
     })
 })
 
-//update user by id
+//update users by id
 router.post('/users/:id', (req, res, next) => {
     let id = req.params.id;
     let username = req.body.username;
@@ -37,7 +39,6 @@ router.post('/users/:id', (req, res, next) => {
     let l_name = req.body.l_name;
     let tel_num = req.body.tel_num;
     let email = req.body.email;
-    let address = req.body.address;
     let gender = req.body.gender;
     let group_id = req.body.group_id;
     let errors = false;
@@ -57,7 +58,6 @@ router.post('/users/:id', (req, res, next) => {
             l_name: l_name,
             tel_num : tel_num,
             email : email,
-            address : address,
             gender : gender,
             group_id : group_id
         }
@@ -73,7 +73,7 @@ router.post('/users/:id', (req, res, next) => {
     }
 })
 
-// Delete user by id
+// Delete users by id
 router.delete('/users/:id',(req, res) => {
     db.query('DELETE FROM users WHERE id = ?',[req.params.id],(err, rows, fields) => {
         if(!err){
@@ -84,7 +84,7 @@ router.delete('/users/:id',(req, res) => {
     })
 })
 
-// Insert user
+// Insert users
 router.post('/users',(req, res) => {
     let username = req.body.username;
     let password = req.body.password;
