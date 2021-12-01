@@ -13,7 +13,7 @@ const validateResgister = require('../middleware/validateResgister.middleware');
 // http://localhost:3000/api/sign-up
 router.post("/sign-up", validateResgister, (req,res,next) => {
     db.query(
-    `SELECT id FROM users WHERE LOWER(username) = LOWER(${db.escape(req.body.username)})`, 
+    `SELECT id FROM users WHERE LOWER(email) = LOWER(${db.escape(req.body.email)})`, 
     (err, result) => {
         if(result && result.length) { 
             //error
@@ -28,7 +28,7 @@ router.post("/sign-up", validateResgister, (req,res,next) => {
                         message: err,
                     });
                 } else {
-                    db.query(`INSERT INTO users (username, password, status, registered) VALUES (${db.escape(req.body.username)},'${hash}',${db.escape(req.body.status)},now());`,(err,result) => {
+                    db.query(`INSERT INTO users (email, password, status, registered, agency) VALUES (${db.escape(req.body.email)},'${hash}',${db.escape(req.body.status)},now(),${db.escape(req.body.agency)});`,(err,result) => {
                         if(err){
                             throw err;
                             return res.status(400).send({
@@ -47,7 +47,7 @@ router.post("/sign-up", validateResgister, (req,res,next) => {
 
 // http://localhost:3000/api/login
 router.post("/login",(req,res,next) => {
-    db.query(`SELECT * FROM users WHERE username = ${db.escape(req.body.username)};`,(err,result) => {
+    db.query(`SELECT * FROM users WHERE email = ${db.escape(req.body.email)};`,(err,result) => {
         if(err) {
             throw err;
             return res.status(400).send({
@@ -56,7 +56,7 @@ router.post("/login",(req,res,next) => {
         }
         if(!result.length) {
             return res.status(400).send({
-                message: 'Username or password incorrect!'
+                message: 'Email or Password incorrect!'
             })
         }
 
@@ -64,13 +64,13 @@ router.post("/login",(req,res,next) => {
             if(bErr) {
                 throw bErr;
                 return res.status(400).send({
-                    message: "Username or password incorrect!",
+                    message: "Email or Password incorrect!",
                 })
             }
             if(bResult) {
                 // password match
                 const token = jwt.sign({
-                    username: result[0].username,
+                    email: result[0].email,
                     userID: result[0].id,
                 }, 
                 'SECRETKEY',{
@@ -84,7 +84,7 @@ router.post("/login",(req,res,next) => {
                 })
             }
             return res.status(401).json({
-                message: "Username or password incorrect!"
+                message: "Email or Password incorrect!"
             })
         });
     });

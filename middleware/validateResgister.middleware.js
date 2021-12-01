@@ -1,6 +1,6 @@
 const validateResgister = (req,res,next) => {
     //username min length 4
-    if(!req.body.username || req.body.username.length < 4){
+    if(!req.body.email || req.body.email.length < 4){
         return res.status(400).send({
             message: "Please enter a username with min. 4 chars",
         });

@@ -32,13 +32,12 @@ router.get('/users/:id',(req, res) => {
 //update users by id
 router.post('/users/:id', (req, res, next) => {
     let id = req.params.id;
-    let username = req.body.username;
+    let email = req.body.email;
     let password = req.body.password;
     let status = req.body.status;
     let f_name = req.body.f_name;
     let l_name = req.body.l_name;
     let tel_num = req.body.tel_num;
-    let email = req.body.email;
     let gender = req.body.gender;
     let group_id = req.body.group_id;
     let errors = false;
@@ -51,13 +50,12 @@ router.post('/users/:id', (req, res, next) => {
 
     if(!errors){
         let form_data = {
-            username: username,
+            email : email,
             password: password,
             status : status,
             f_name : f_name,
             l_name: l_name,
             tel_num : tel_num,
-            email : email,
             gender : gender,
             group_id : group_id
         }
@@ -86,20 +84,20 @@ router.delete('/users/:id',(req, res) => {
 
 // Insert users
 router.post('/users',(req, res) => {
-    let username = req.body.username;
+    let email = req.body.email;
     let password = req.body.password;
     let status = req.body.status;
     let group_id = req.body.group_id;
     let errors = false;
 
-    if(username.length === 0 || password.length === 0 || status.length === 0 || group_id.length === 0){
+    if(email.length === 0 || password.length === 0 || status.length === 0 || group_id.length === 0){
         errors = true;
         res.send('Please fill your information');
     }
 
     if(!errors){
         let form_data = {
-            username: username,
+            email: email,
             password: password,
             status : status,
             group_id : group_id
