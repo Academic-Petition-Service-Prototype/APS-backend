@@ -9,3 +9,8 @@ const port = process.env.API_PORT || 3000;
 server.listen(port, () => {
   console.log(`Express is running on http://localhost:${port}`);
 });
+
+//Start server test git merge
+// server.listen(port, () => {
+//   console.log(`Express is running on http://localhost:${port}`);
+// });
