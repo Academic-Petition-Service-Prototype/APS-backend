@@ -6,6 +6,7 @@ const authentication = require('./routes/authentication.routes');
 const users = require('./routes/users.routes');
 const groups = require('./routes/groups.routes');
 const reports = require('./routes/reports.routes');
+const forms = require('./routes/forms.routes');
 
 // middleware
 const verifyToken = require('./middleware/authentication.middleware');

@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const bcrypt = require('bcrypt');
 const router = require('express').Router();
 
 // Database
@@ -84,33 +85,35 @@ router.delete('/users/:id',(req, res) => {
 
 // Insert users
 router.post('/users',(req, res) => {
-    let email = req.body.email;
-    let password = req.body.password;
-    let status = req.body.status;
-    let group_id = req.body.group_id;
-    let errors = false;
-
-    if(email.length === 0 || password.length === 0 || status.length === 0 || group_id.length === 0){
-        errors = true;
-        res.send('Please fill your information');
-    }
-
-    if(!errors){
-        let form_data = {
-            email: email,
-            password: password,
-            status : status,
-            group_id : group_id
+    db.query(`SELECT id FROM users WHERE LOWER(email) = LOWER(${db.escape(req.body.email)})`, (err, result) => {
+        if(result && result.length) { 
+            //error
+            return res.status(409).send({
+                message: 'อีเมลล์นี้มีอยู่ในระบบแล้ว'
+            });
+        } else { //email not in use
+            bcrypt.hash(req.body.password, 10, (err,hash) => {
+                if(err) {
+                    throw err;
+                    return res.status(500).send({
+                        message: err,
+                    });
+                } else {
+                    db.query(`INSERT INTO users (email, password, status, registered, agency) VALUES (${db.escape(req.body.email)},'${hash}',${db.escape(req.body.status)},now(),${db.escape(req.body.agency)});`,(err,result) => {
+                        if(err){
+                            throw err;
+                            return res.status(400).send({
+                                message:err,
+                            });
+                        }
+                        return res.status(201).send({
+                            message: "เพิ่มผู้ใช้งานสำเร็จ",
+                        })
+                    });
+                }
+            });
         }
-        
-        db.query('INSERT INTO users SET ?',[form_data],(err, result) => {
-            if(!err){
-                res.send('Add user successful');
-            } else {
-                console.log(err)
-            }
-        })
-    }
+    });
 })
 
 module.exports = router;
