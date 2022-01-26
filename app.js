@@ -25,5 +25,6 @@ app.use('/api', authentication);
 app.use('/api',users);
 app.use('/api',groups);
 app.use('/api',reports);
+app.use('/api',forms);
 
 module.exports = app;
