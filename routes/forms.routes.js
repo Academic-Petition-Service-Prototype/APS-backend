@@ -8,45 +8,38 @@ const db = require('../lib/connectdatabase.js');
 router.post('/forms',(req, res) => {
     let form_name = req.body.form_name;
     let form_specific = req.body.form_specific;
-    let created_date = now();
-    let created_by = req.body.f_name + '-' + req.body.l_name;
+    form_specific = JSON.stringify(form_specific);
+    let created_by = req.body.f_name + ' ' + req.body.l_name;
     let approval_name = req.body.approval_name;
+    approval_name = JSON.stringify(approval_name);
     let form_status = 'active';
+    let error = false;
 
-    if(form_name.length === 0){
-        return res.status(409).send({
-            message: 'กรุณากรอกชื่อคำร้อง'
-        });
+    if(form_name == undefined){
+        error = true;
+        res.send('กรุณากรอกชื่อคำร้อง');
     }
 
-    db.query(
-        `SELECT id FROM forms WHERE form_name = ${db.escape(req.body.form_name)}`, 
-        (err, result) => {
-            if(result && result.length) { 
-                //error
-                return res.status(409).send({
-                    message: 'ชื่อคำร้องนี้มีอยู่ในระบบแล้ว'
-                });
-            } else { //form name not in use
-                let form_data = {
-                    form_name: form_name,
-                    form_specific: form_specific,
-                    created_date : created_date,
-                    created_by : created_by,
-                    approval_name : approval_name,
-                    form_status : form_status
+    if(!error){
+        db.query(
+            `SELECT id FROM forms WHERE form_name = ${db.escape(req.body.form_name)}`, 
+            (err, result) => {
+                if(result && result.length) { 
+                    //error
+                    res.send('ชื่อคำร้องนี้มีอยู่ในระบบแล้ว');
+                } else { //form name not in use
+                    db.query(`INSERT INTO forms (form_name, form_specific, created_date, created_by, approval_name,form_status ) 
+                            VALUES ('${form_name}', '${form_specific}', now(), '${created_by}', '${approval_name}', '${form_status}');`,(err, result) => {
+                        if(!err){
+                            res.send('เพิ่มคำร้องใหม่สำเร็จ');
+                        } else {
+                            console.log(err)
+                        }
+                    })
                 }
-                
-                db.query('INSERT INTO users SET ?',[form_data],(err, result) => {
-                    if(!err){
-                        res.send('เพิ่มคำร้องใหม่สำเร็จ');
-                    } else {
-                        console.log(err)
-                    }
-                })
             }
-        }
-    );
+        );
+    }
 })
 
 module.exports = router;
