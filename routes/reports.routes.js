@@ -41,10 +41,11 @@ router.put('/reports',(req, res) => {
 
 // Insert reports
 router.post('/reports',(req, res) => {
+    let users_id = req.body.users_id;
     let report_title = req.body.report_title;
     let report_detail = req.body.report_detail;
     let errors = false;
-    if(report_title.length === 0 || report_detail.length === 0){
+    if(report_title.length === 0 || report_detail.length === 0 ){
         errors = true;
         res.send('Please fill your information');
     }
@@ -55,6 +56,7 @@ router.post('/reports',(req, res) => {
             report_detail: report_detail,
             report_state: 'unread',
             report_created: new Date(),
+            users_id: users_id
         }
         
         db.query('INSERT INTO reports SET ?',[form_data],(err, result) => {
