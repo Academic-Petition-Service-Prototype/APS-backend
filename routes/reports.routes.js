@@ -6,7 +6,7 @@ const db = require('../lib/connectdatabase');
 
 // Get all report
 router.get('/reports',(req, res) => {
-    db.query('SELECT id, report_title, report_detail,  report_state, report_created FROM reports',(err, rows, fields) => {
+    db.query('SELECT id, report_title, report_detail, report_state, report_created FROM reports',(err, rows, fields) => {
         if(!err){
             res.send(rows);
         } else {
