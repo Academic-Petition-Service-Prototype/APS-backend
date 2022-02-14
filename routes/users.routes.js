@@ -39,6 +39,8 @@ router.post('/users/:id', (req, res, next) => {
     let l_name = req.body.l_name;
     let tel_num = req.body.tel_num;
     let gender = req.body.gender;
+    let address = req.body.address;
+    let img = req.body.img;
     let agency_id = req.body.agency_id;
     let errors = false;
 
@@ -48,7 +50,7 @@ router.post('/users/:id', (req, res, next) => {
     }
 
     if(!errors){
-        bcrypt.hash(req.body.password, 10, (err,hash) => {
+        bcrypt.hash(password, 10, (err,hash) => {
             if(err) {
                 throw err;
                 return res.status(500).send({
@@ -63,6 +65,8 @@ router.post('/users/:id', (req, res, next) => {
                     l_name: l_name,
                     tel_num : tel_num,
                     gender : gender,
+                    address: address,
+                    img: img,
                     agency_id : agency_id
                 }
                 // update query
@@ -92,6 +96,17 @@ router.delete('/users/:id',(req, res) => {
 
 // Insert users
 router.post('/users',(req, res) => {
+    let email = req.body.email;
+    let password = req.body.password;
+    let role = req.body.role;
+    let f_name = req.body.f_name;
+    let l_name = req.body.l_name;
+    let tel_num = req.body.tel_num;
+    let gender = req.body.gender;
+    let address = req.body.address;
+    let img = req.body.img;
+    let agency_id = req.body.agency_id;
+    
     db.query(`SELECT id FROM users WHERE LOWER(email) = LOWER(${db.escape(req.body.email)})`, (err, result) => {
         if(result && result.length) { 
             //error
@@ -99,14 +114,26 @@ router.post('/users',(req, res) => {
                 message: 'อีเมลนี้มีอยู่ในระบบแล้ว'
             });
         } else { //email not in use
-            bcrypt.hash(req.body.password, 10, (err,hash) => {
+            bcrypt.hash(password, 10, (err,hash) => {
                 if(err) {
                     throw err;
                     return res.status(500).send({
                         message: err,
                     });
                 } else {
-                    db.query(`INSERT INTO users (email, password, role, registered, agency_id) VALUES (${db.escape(req.body.email)},'${hash}',${db.escape(req.body.role)},now(),${db.escape(req.body.agency_id)});`,(err,result) => {
+                    let form_data = {
+                        email : email,
+                        password: hash,
+                        role : role,
+                        f_name : f_name,
+                        l_name: l_name,
+                        tel_num : tel_num,
+                        gender : gender,
+                        address: address,
+                        img: img,
+                        agency_id : agency_id
+                    }
+                    db.query(`INSERT INTO users SET ?`,[form_data],(err,result) => {
                         if(err){
                             throw err;
                             return res.status(400).send({
