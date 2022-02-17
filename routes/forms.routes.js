@@ -19,7 +19,7 @@ router.get('/forms',(req, res) => {
                 console.log(err)
             }
         })
-    } else if(role === 'chief'){
+    } else if(role === 'chief' || role === 'user'){
         db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,users_id FROM forms 
         INNER JOIN users on forms.users_id = user_id 
         INNER JOIN agency on agency_id = users.agencies_id 
