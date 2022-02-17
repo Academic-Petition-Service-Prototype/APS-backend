@@ -5,7 +5,7 @@ const router = require('express').Router();
 const db = require('../lib/connectdatabase.js');
 
 // Get all forms
-router.get('/forms',(req, res) => {
+router.post('/getforms',(req, res) => {
     let user_id = req.body.user_id;
     let role = req.body.role;
     let agency = req.body.agency;
@@ -38,18 +38,18 @@ router.get('/forms',(req, res) => {
             if(!err){
                 res.send(rows);
             } else {
-                console.log(err)
+                console.log(err);
             }
         })
     }else {
-        console.log(err)
-        res.send(err);
+        console.log("err");
+        res.status(421)
     }
     
 })
 
 // Insert forms
-router.post('/forms',(req, res) => {
+router.post('/insertforms',(req, res) => {
     let form_name = req.body.form_name;
     let form_specific = req.body.form_specific;
     form_specific = JSON.stringify(form_specific);

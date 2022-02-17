@@ -47,7 +47,12 @@ router.post("/sign-up", validateResgister, (req,res,next) => {
 
 // http://localhost:3000/api/login
 router.post("/login",(req,res,next) => {
-    db.query(`SELECT * FROM users WHERE email = ${db.escape(req.body.email)};`,(err,result) => {
+    // db.query(`SELECT * FROM users WHERE email = ${db.escape(req.body.email)};`,(err,result) => {
+        db.query(`SELECT *
+        FROM users
+        FULL JOIN agency
+        ON agencies_id = agency.agency_id	
+        WHERE email = ${db.escape(req.body.email)};`,(err,result) => {
         if(err) {
             throw err;
             return res.status(400).send({
@@ -76,7 +81,7 @@ router.post("/login",(req,res,next) => {
                 'SECRETKEY',{
                     expiresIn: "7d"
                 });
-                db.query(`UPDATE users SET last_login = now() WHERE id = '${result[0].id}';`);
+                db.query(`UPDATE users SET last_login = now() WHERE user_id = '${result[0].id}';`);
                 return res.status(200).send({
                     message: 'Logged in!',
                     token,
