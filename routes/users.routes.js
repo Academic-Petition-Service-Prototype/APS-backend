@@ -20,7 +20,7 @@ router.get('/users',(req, res) => {
 // Get users by id
 router.get('/users/:id',(req, res) => {
     let id = req.params.id;
-    db.query('SELECT * FROM users WHERE id = ?',[req.params.id],(err, rows, fields) => {
+    db.query('SELECT * FROM users WHERE user_id = ?',[req.params.id],(err, rows, fields) => {
         if(rows.length <= 0){
             res.send('ไม่พบผู้ใช้งานหมายเลข'+id+'ในฐานข้อมูล')
         } else {
@@ -70,7 +70,7 @@ router.post('/users/:id', (req, res, next) => {
                     agency_id : agency_id
                 }
                 // update query
-                db.query('UPDATE users SET ? WHERE id = ' + id, form_data, (err,result) => {
+                db.query('UPDATE users SET ? WHERE user_id = ' + id, form_data, (err,result) => {
                     if (err) {
                         res.send('เกิดข้อผิดพลาดในการอัพเดตข้อมูลผู้ใช้งาน', err);
                     } else {
@@ -85,7 +85,7 @@ router.post('/users/:id', (req, res, next) => {
 
 // Delete users by id
 router.delete('/users/:id',(req, res) => {
-    db.query('DELETE FROM users WHERE id = ?',[req.params.id],(err, rows, fields) => {
+    db.query('DELETE FROM users WHERE user_id = ?',[req.params.id],(err, rows, fields) => {
         if(!err){
             res.send('ลบผู้ใช้งานสำเร็จ');
         } else {
@@ -107,7 +107,7 @@ router.post('/users',(req, res) => {
     let img = req.body.img;
     let agency_id = req.body.agency_id;
     
-    db.query(`SELECT id FROM users WHERE LOWER(email) = LOWER(${db.escape(req.body.email)})`, (err, result) => {
+    db.query(`SELECT user_id FROM users WHERE LOWER(email) = LOWER(${db.escape(req.body.email)})`, (err, result) => {
         if(result && result.length) { 
             //error
             return res.status(409).send({

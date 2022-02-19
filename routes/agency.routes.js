@@ -18,10 +18,9 @@ router.get('/agency',(req, res) => {
 
 // Get agency by id
 router.get('/agency/:id',(req, res) => {
-    let id = req.params.id;
-    db.query('SELECT * FROM agency WHERE id = ?',[req.params.id],(err, rows, fields) => {
+    db.query('SELECT * FROM agency WHERE agency_id = ?',[req.params.id],(err, rows, fields) => {
         if(rows.length <= 0){
-            res.status(409).send('ไม่พบหน่วยงานหมายเลข'+id+'ในฐานข้อมูล')
+            res.status(409).send('ไม่พบหน่วยงานหมายเลข'+req.params.id+'ในฐานข้อมูล')
         } else {
             res.send(rows);
         }
@@ -30,7 +29,7 @@ router.get('/agency/:id',(req, res) => {
 
 //update agency by id
 router.post('/agency/:id', (req, res, next) => {
-    let id = req.params.id;
+    let agency_id = req.params.id;
     let agency_name = req.body.agency_name;
     let errors = false;
 
@@ -41,7 +40,7 @@ router.post('/agency/:id', (req, res, next) => {
 
     if(!errors){
         // update query
-        db.query(`UPDATE agency SET agency_name = ? WHERE id = ?`,[agency_name, id],(err,result) => {
+        db.query(`UPDATE agency SET agency_name = ? WHERE agency_id = ?`,[agency_name, agency_id],(err,result) => {
             if (err) {
                 res.send('เกิดข้อผิดพลาดในการอัพเดตหน่วยงาน', err);
             } else {
@@ -54,7 +53,7 @@ router.post('/agency/:id', (req, res, next) => {
 
 // Delete agency by id
 router.delete('/agency/:id',(req, res) => {
-    db.query('DELETE FROM agency WHERE id = ?',[req.params.id],(err, rows, fields) => {
+    db.query('DELETE FROM agency WHERE agency_id = ?',[req.params.id],(err, rows, fields) => {
         if(!err){
             res.send('ลบหน่วยงานสำเสร็จ');
         } else {
@@ -76,7 +75,7 @@ router.post('/agency',(req, res) => {
 
     if(!errors){
         db.query(
-            `SELECT id FROM agency WHERE agency_name = ${db.escape(req.body.agency_name)}`, 
+            `SELECT agency_id FROM agency WHERE agency_name = ${db.escape(req.body.agency_name)}`, 
             (err, result) => {
                 if(result && result.length) { 
                     //error
