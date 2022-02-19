@@ -17,11 +17,10 @@ router.get('/reports',(req, res) => {
 
 // Get report by id
 router.get('/reports/:id',(req, res) => {
-    let id = req.params.id;
     db.query('SELECT report_id, report_title, report_detail,  report_state, report_created FROM reports WHERE report_id = ?',[req.params.id],(err, rows, fields) => {
         console.log(rows)
         if(rows.length <= 0){
-            res.send('Report not found with id = ' + id)
+            res.send('Report not found with id = ' + req.params.id)
         } else {
             res.send(rows[0]);
         }
@@ -30,8 +29,7 @@ router.get('/reports/:id',(req, res) => {
 
 // Change state report
 router.put('/reports',(req, res) => {
-    let id = req.body.id;
-    db.query(`UPDATE reports SET report_state = 'read' WHERE reports.report_id = ${id};`,(err, rows, fields) => {
+    db.query(`UPDATE reports SET report_state = 'read' WHERE reports.report_id = ${req.body.id};`,(err, rows, fields) => {
         if(!err){
             res.send('Change state success');
         } else {

@@ -79,7 +79,7 @@ router.post('/insertforms',(req, res) => {
 
     if(!error){
         db.query(
-            `SELECT id FROM forms WHERE form_name = ${db.escape(req.body.form_name)}`, 
+            `SELECT form_id FROM forms WHERE form_name = ${db.escape(req.body.form_name)}`, 
             (err, result) => {
                 if(result && result.length) { 
                     //error

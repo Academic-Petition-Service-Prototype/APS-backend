@@ -13,7 +13,7 @@ const validateResgister = require('../middleware/validateResgister.middleware');
 // http://localhost:3000/api/sign-up
 router.post("/sign-up", validateResgister, (req,res,next) => {
     db.query(
-    `SELECT id FROM users WHERE LOWER(email) = LOWER(${db.escape(req.body.email)})`, 
+    `SELECT user_id FROM users WHERE LOWER(email) = LOWER(${db.escape(req.body.email)})`, 
     (err, result) => {
         if(result && result.length) { 
             //error
@@ -76,7 +76,7 @@ router.post("/login",(req,res,next) => {
                 // password match
                 const token = jwt.sign({
                     email: result[0].email,
-                    userID: result[0].id,
+                    userID: result[0].user_id,
                 }, 
                 'SECRETKEY',{
                     expiresIn: "7d"
