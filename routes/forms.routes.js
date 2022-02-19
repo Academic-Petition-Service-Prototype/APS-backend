@@ -48,6 +48,19 @@ router.get('/forms',(req, res) => {
     
 })
 
+// Get form by id
+router.get('/forms/:id',(req, res) => {
+    let id = req.params.id;
+    db.query('SELECT * FROM forms WHERE form_id = ?',[req.params.id],(err, rows, fields) => {
+        console.log(rows);
+        if(rows.length <= 0){
+            res.send('Petition not found with id = ' + id)
+        } else {
+            res.send(rows[0]);
+        }
+    })
+})
+
 // Insert forms
 router.post('/forms',(req, res) => {
     let form_name = req.body.form_name;
