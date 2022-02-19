@@ -6,7 +6,7 @@ const db = require('../lib/connectdatabase');
 
 // Get all report
 router.get('/reports',(req, res) => {
-    db.query('SELECT id, report_title, report_detail, report_state, report_created FROM reports',(err, rows, fields) => {
+    db.query('SELECT report_id, report_title, report_detail, report_state, report_created FROM reports',(err, rows, fields) => {
         if(!err){
             res.send(rows);
         } else {
@@ -18,7 +18,8 @@ router.get('/reports',(req, res) => {
 // Get report by id
 router.get('/reports/:id',(req, res) => {
     let id = req.params.id;
-    db.query('SELECT id, report_title, report_detail,  report_state, report_created FROM reports WHERE id = ?',[req.params.id],(err, rows, fields) => {
+    db.query('SELECT report_id, report_title, report_detail,  report_state, report_created FROM reports WHERE report_id = ?',[req.params.id],(err, rows, fields) => {
+        console.log(rows)
         if(rows.length <= 0){
             res.send('Report not found with id = ' + id)
         } else {
@@ -30,7 +31,7 @@ router.get('/reports/:id',(req, res) => {
 // Change state report
 router.put('/reports',(req, res) => {
     let id = req.body.id;
-    db.query(`UPDATE reports SET report_state = 'read' WHERE reports.id = ${id};`,(err, rows, fields) => {
+    db.query(`UPDATE reports SET report_state = 'read' WHERE reports.report_id = ${id};`,(err, rows, fields) => {
         if(!err){
             res.send('Change state success');
         } else {
