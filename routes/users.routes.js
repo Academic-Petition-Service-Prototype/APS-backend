@@ -29,6 +29,19 @@ router.get('/users/:id',(req, res) => {
     })
 })
 
+// Get chief by id
+router.get('/getchief/:id',(req, res) => {
+    let id = req.params.id;
+    console.log(req.params.id)
+    db.query(`SELECT  f_name, l_name FROM users WHERE agencies_id = ? AND role = 'chief'`,[req.params.id],(err, rows, fields) => {
+        if(rows.length <= 0){
+            res.send('ไม่พบ chief')
+        } else {
+            res.send(rows);
+        }
+    })
+})
+
 //update users by id
 router.post('/users/:id', (req, res, next) => {
     let id = req.params.id;
@@ -41,7 +54,7 @@ router.post('/users/:id', (req, res, next) => {
     let gender = req.body.gender;
     let address = req.body.address;
     let img = req.body.img;
-    let agency_id = req.body.agency_id;
+    let agencies_id = req.body.agencies_id;
     let errors = false;
 
     if (email.length === 0 || password.length === 0){
@@ -67,7 +80,7 @@ router.post('/users/:id', (req, res, next) => {
                     gender : gender,
                     address: address,
                     img: img,
-                    agency_id : agency_id
+                    agencies_id : agencies_id
                 }
                 // update query
                 db.query('UPDATE users SET ? WHERE user_id = ' + id, form_data, (err,result) => {
@@ -105,7 +118,7 @@ router.post('/users',(req, res) => {
     let gender = req.body.gender;
     let address = req.body.address;
     let img = req.body.img;
-    let agency_id = req.body.agency_id;
+    let agencies_id = req.body.agencies_id;
     
     db.query(`SELECT user_id FROM users WHERE LOWER(email) = LOWER(${db.escape(req.body.email)})`, (err, result) => {
         if(result && result.length) { 
@@ -131,7 +144,7 @@ router.post('/users',(req, res) => {
                         gender : gender,
                         address: address,
                         img: img,
-                        agency_id : agency_id
+                        agencies_id : agencies_id
                     }
                     db.query(`INSERT INTO users SET ?`,[form_data],(err,result) => {
                         if(err){
