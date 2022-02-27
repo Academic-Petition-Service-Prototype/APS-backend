@@ -31,9 +31,7 @@ router.get('/users/:id',(req, res) => {
 
 // Get chief by id
 router.get('/getchief/:id',(req, res) => {
-    let id = req.params.id;
-    console.log(req.params.id)
-    db.query(`SELECT  f_name, l_name FROM users WHERE agencies_id = ? AND role = 'chief'`,[req.params.id],(err, rows, fields) => {
+    db.query(`SELECT user_id, f_name, l_name FROM users WHERE agencies_id = ? AND role = 'chief'`,[req.params.id],(err, rows, fields) => {
         if(rows.length <= 0){
             res.send('ไม่พบ chief')
         } else {
