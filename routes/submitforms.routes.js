@@ -4,12 +4,31 @@ const router = require('express').Router();
 // Database
 const db = require('../lib/connectdatabase');
 
+// Get all submitforms by chief name in order
+router.post('/getsubmitforms',(req, res) => {
+    let user_id = '%user_id":' + req.body.user_id + ",%";
+
+    db.query(`SELECT * , CONCAT(f_name," ",l_name) AS fullname
+    FROM submitforms 
+    FULL JOIN forms ON forms_id = forms.form_id 
+    JOIN users ON forms.users_id = users.user_id 
+    WHERE approval_name LIKE ?`,user_id,(err, rows, fields) => {
+        if(!err){
+            res.send(rows);
+        } else {
+            console.log(err)
+        }
+    })
+})
+
 // Insert submitforms
 router.post('/submitforms',(req, res) => {
     let users_id = req.body.users_id;
     let forms_id = req.body.forms_id;
     let form_value = req.body.form_value;
     form_value = JSON.stringify(form_value);
+    let approval_order = req.body.approval_order;
+    approval_order = JSON.stringify(approval_order);
     let submit_date = new Date();
     let submit_state = 1;
     let errors = false;
@@ -19,6 +38,7 @@ router.post('/submitforms',(req, res) => {
             form_value: form_value,
             submit_date: submit_date,
             submit_state: submit_state,
+            approval_order: approval_order,
             users_id: users_id,
             forms_id: forms_id,
         }
