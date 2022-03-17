@@ -4,8 +4,10 @@ const cors = require('cors');
 //import routes
 const authentication = require('./routes/authentication.routes');
 const users = require('./routes/users.routes');
-const groups = require('./routes/groups.routes');
+const agency = require('./routes/agency.routes');
 const reports = require('./routes/reports.routes');
+const forms = require('./routes/forms.routes');
+const submitforms = require('./routes/submitforms.routes');
 
 // middleware
 const verifyToken = require('./middleware/authentication.middleware');
@@ -23,7 +25,9 @@ app.use(cors());
 app.use('/api', authentication);
 // app.use('/api/users', verifyToken,users);
 app.use('/api',users);
-app.use('/api',groups);
+app.use('/api',agency);
 app.use('/api',reports);
+app.use('/api',forms);
+app.use('/api',submitforms);
 
 module.exports = app;
