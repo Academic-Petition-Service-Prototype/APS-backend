@@ -8,10 +8,10 @@ const db = require('../lib/connectdatabase');
 router.post('/getsubmitforms',(req, res) => {
     let user_id = '%user_id":' + req.body.user_id + ",%";
 
-    db.query(`SELECT * , CONCAT(f_name," ",l_name) AS fullname
+    db.query(`SELECT submit_id, submit_date, approval_order, submit_state, form_name , CONCAT(f_name," ",l_name) AS fullname
     FROM submitforms 
-    FULL JOIN forms ON forms_id = forms.form_id 
-    JOIN users ON forms.users_id = users.user_id 
+    FULL JOIN users ON users_id = users.user_id 
+    JOIN forms ON forms_id = forms.form_id 
     WHERE approval_name LIKE ?`,user_id,(err, rows, fields) => {
         if(!err){
             res.send(rows);
@@ -20,6 +20,25 @@ router.post('/getsubmitforms',(req, res) => {
         }
     })
 })
+
+// Get submitforms by id
+router.get('/getsubmitforms/:id',(req, res) => {
+    let submit_id = req.params.id;
+
+    db.query(`SELECT submit_id, form_value, submit_state, approval_order, email, f_name, l_name, tel_num, gender, address, img
+    FROM submitforms 
+    FULL JOIN users ON users_id = users.user_id 
+    JOIN forms ON forms_id = forms.form_id 
+    WHERE submit_id = ?`,submit_id,(err, rows, fields) => {
+        if(!err){
+            res.send(rows);
+        } else {
+            console.log(err)
+        }
+    })
+})
+
+
 
 // Insert submitforms
 router.post('/submitforms',(req, res) => {
