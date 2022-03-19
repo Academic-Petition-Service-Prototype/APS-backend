@@ -38,7 +38,25 @@ router.get('/getsubmitforms/:id',(req, res) => {
     })
 })
 
+router.post('/approvepetition',(req, res) => {
+    let submit_id = req.body.submit_id;
+    let approval_order = req.body.approval_order;
+    approval_order = JSON.stringify(approval_order);
+    let submit_state = req.body.submit_state;
 
+    let form_data = {
+        approval_order: approval_order,
+        submit_state: submit_state,
+    }
+
+    db.query(`UPDATE submitforms SET ? WHERE submit_id = ?`,[form_data,submit_id],(err, rows, fields) => {
+        if(!err){
+            res.send('Approve petition successful');
+        } else {
+            console.log(err)
+        }
+    })
+})
 
 // Insert submitforms
 router.post('/submitforms',(req, res) => {
