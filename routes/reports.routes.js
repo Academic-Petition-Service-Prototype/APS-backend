@@ -51,7 +51,7 @@ router.post('/reports',(req, res) => {
     let report_title = req.body.report_title;
     let report_detail = req.body.report_detail;
     let errors = false;
-    if(report_title.length === 0 || report_detail.length === 0 ){
+    if((report_title.length === 0 || report_detail.length === 0) || (report_title.length == undefined || report_detail.length == undefined)){
         errors = true;
         res.send('Please fill your information');
     }
