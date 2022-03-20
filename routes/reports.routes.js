@@ -5,8 +5,14 @@ const router = require('express').Router();
 const db = require('../lib/connectdatabase');
 
 // Get all report
-router.get('/reports',(req, res) => {
-    db.query('SELECT report_id, report_title, report_detail, report_state, report_created FROM reports',(err, rows, fields) => {
+router.post('/reports',(req, res) => {
+    agency_id = req.body.agency_id;
+    
+    db.query(`SELECT report_id, report_title, report_detail, report_state, report_created
+    FROM reports
+    INNER JOIN users
+    ON reports.users_id = users.user_id
+    WHERE agencies_id = ?`,[agency_id],(err, rows, fields) => {
         if(!err){
             res.send(rows);
         } else {
