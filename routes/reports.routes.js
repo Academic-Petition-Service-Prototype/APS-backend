@@ -4,8 +4,8 @@ const router = require('express').Router();
 // Database
 const db = require('../lib/connectdatabase');
 
-// Get all report
-router.post('/reports',(req, res) => {
+// Get all report by agency_id
+router.post('/agencyreports',(req, res) => {
     agency_id = req.body.agency_id;
     
     db.query(`SELECT report_id, report_title, report_detail, report_state, report_created
