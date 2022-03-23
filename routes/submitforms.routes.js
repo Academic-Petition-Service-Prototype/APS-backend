@@ -23,15 +23,16 @@ router.post('/getsubmitforms',(req, res) => {
 
 // Get submitforms by id
 router.get('/getsubmitforms/:id',(req, res) => {
-    let user_id = '%user_id":' + req.body.user_id + ",%";
+    let submit_id = req.params.id;
 
-    db.query(`SELECT submit_id, submit_date, approval_order, submit_state, form_name , CONCAT(f_name," ",l_name) AS fullname
+    db.query(`SELECT email, f_name, l_name, tel_num, gender, address, form_name, form_specific, form_value, approval_order
     FROM submitforms 
     FULL JOIN users ON users_id = users.user_id 
     JOIN forms ON forms_id = forms.form_id 
-    WHERE approval_name LIKE ?`,user_id,(err, rows, fields) => {
+    WHERE submit_id = ?`,submit_id,(err, rows, fields) => {
         if(!err){
             res.send(rows);
+            console.log(rows)
         } else {
             console.log(err)
         }
@@ -42,7 +43,7 @@ router.get('/getsubmitforms/:id',(req, res) => {
 router.post('/getsubmitformsbyagency',(req, res) => {
     let agency_id = req.body.agency_id;
 
-    db.query(`SELECT submit_id, submit_date, approval_order, submit_state, form_name , CONCAT(f_name," ",l_name) AS fullname
+    db.query(`SELECT submit_id, submit_date, approval_order, submit_state, form_name, submit_refuse, CONCAT(f_name," ",l_name) AS fullname
     FROM submitforms 
     FULL JOIN users ON users_id = users.user_id 
     JOIN forms ON forms_id = forms.form_id 
