@@ -4,9 +4,15 @@ const router = require('express').Router();
 // Database
 const db = require('../lib/connectdatabase');
 
-// Get all report
-router.get('/reports',(req, res) => {
-    db.query('SELECT report_id, report_title, report_detail, report_state, report_created FROM reports',(err, rows, fields) => {
+// Get all report by agency_id
+router.post('/agencyreports',(req, res) => {
+    agency_id = req.body.agency_id;
+    
+    db.query(`SELECT report_id, report_title, report_detail, report_state, report_created
+    FROM reports
+    INNER JOIN users
+    ON reports.users_id = users.user_id
+    WHERE agencies_id = ?`,[agency_id],(err, rows, fields) => {
         if(!err){
             res.send(rows);
         } else {
@@ -44,7 +50,7 @@ router.post('/reports',(req, res) => {
     let report_title = req.body.report_title;
     let report_detail = req.body.report_detail;
     let errors = false;
-    if(report_title.length === 0 || report_detail.length === 0 ){
+    if((report_title.length === 0 || report_detail.length === 0) || (report_title.length == undefined || report_detail.length == undefined)){
         errors = true;
         res.send('Please fill your information');
     }
