@@ -23,7 +23,7 @@ router.post('/agencyreports',(req, res) => {
 
 // Get all reports
 router.get('/reports',(req, res) => {
-    db.query('SELECT id, report_title, report_detail, report_state, report_created FROM reports',(err, rows, fields) => {
+    db.query('SELECT report_id, report_title, report_detail, report_state, report_created FROM reports',(err, rows, fields) => {
         console.log(rows);
         if(!err){
             res.send(rows);
