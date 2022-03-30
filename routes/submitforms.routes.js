@@ -21,24 +21,6 @@ router.post('/getsubmitforms',(req, res) => {
     })
 })
 
-// Get submitforms by id
-router.get('/getsubmitforms/:id',(req, res) => {
-    let submit_id = req.params.id;
-
-    db.query(`SELECT email, f_name, l_name, tel_num, gender, address, submit_id, form_name, form_specific, form_value, approval_order, submit_state
-    FROM submitforms 
-    FULL JOIN users ON users_id = users.user_id 
-    JOIN forms ON forms_id = forms.form_id 
-    WHERE submit_id = ?`,submit_id,(err, rows, fields) => {
-        if(!err){
-            res.send(rows);
-            console.log(rows)
-        } else {
-            console.log(err)
-        }
-    })
-})
-
 // Get submitforms by agency
 router.post('/getsubmitformsbyagency',(req, res) => {
     let agency_id = req.body.agency_id;
@@ -50,6 +32,39 @@ router.post('/getsubmitformsbyagency',(req, res) => {
     WHERE agencies_id = ?`,agency_id,(err, rows, fields) => {
         if(!err){
             res.send(rows);
+        } else {
+            console.log(err)
+        }
+    })
+})
+
+// Get all submitforms
+router.get('/getsubmitforms',(req, res) => {
+    db.query(`SELECT submit_id, submit_date, approval_order, submit_state, form_name, CONCAT(f_name," ",l_name) AS fullname
+    FROM submitforms 
+    INNER JOIN users ON users_id = users.user_id 
+    JOIN forms ON forms_id = forms.form_id`,(err, rows, fields) => {
+        if(!err){
+            res.send(rows);
+            console.log(rows)
+        } else {
+            console.log(err)
+        }
+    })
+})
+
+// Get submitforms by id
+router.get('/getsubmitforms/:id',(req, res) => {
+    let submit_id = req.params.id;
+
+    db.query(`SELECT email, f_name, l_name, tel_num, gender, address, submit_id, form_name, form_specific, form_value, approval_order, submit_state
+    FROM submitforms 
+    INNER JOIN users ON users_id = users.user_id 
+    JOIN forms ON forms_id = forms.form_id 
+    WHERE submit_id = ?`,submit_id,(err, rows, fields) => {
+        if(!err){
+            res.send(rows);
+            console.log(rows)
         } else {
             console.log(err)
         }
