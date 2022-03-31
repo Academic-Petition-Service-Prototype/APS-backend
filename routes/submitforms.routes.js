@@ -40,7 +40,7 @@ router.post('/getsubmitformsbyagency',(req, res) => {
 
 // Get all submitforms
 router.get('/getsubmitforms',(req, res) => {
-    db.query(`SELECT submit_id, submit_date, approval_order, submit_state, form_name, CONCAT(f_name," ",l_name) AS fullname
+    db.query(`SELECT submit_id, submit_date, approval_order, submit_state, submit_refuse, form_name, CONCAT(f_name," ",l_name) AS fullname
     FROM submitforms 
     INNER JOIN users ON users_id = users.user_id 
     JOIN forms ON forms_id = forms.form_id`,(err, rows, fields) => {
@@ -71,6 +71,7 @@ router.get('/getsubmitforms/:id',(req, res) => {
     })
 })
 
+// Update submitforms
 router.post('/approvepetition',(req, res) => {
     let submit_id = req.body.submit_id;
     let approval_order = req.body.approval_order;
