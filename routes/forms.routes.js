@@ -10,7 +10,7 @@ router.post('/getforms',(req, res) => {
     let role = req.body.role;
     let agency = req.body.agency;
     if (role === 'admin') {
-        db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,users_id FROM forms 
+        db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,users_id,form_detail FROM forms 
         INNER JOIN users on forms.users_id = user_id `,(err, rows, fields) => {
             console.log(rows);
             if(!err){
@@ -20,7 +20,7 @@ router.post('/getforms',(req, res) => {
             }
         })
     } else if(role === 'chief' || role === 'user'){
-        db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,users_id FROM forms 
+        db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,users_id,form_detail FROM forms 
         INNER JOIN users on forms.users_id = user_id 
         INNER JOIN agency on agency_id = users.agencies_id 
         AND agency.agency_name = ?`,agency,(err, rows, fields) => {
@@ -32,7 +32,7 @@ router.post('/getforms',(req, res) => {
             }
         })
     } else if(role === 'officer'){
-        db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,users_id FROM forms 
+        db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,users_id,form_detail FROM forms 
         WHERE users_id = ?`,user_id,(err, rows, fields) => {
             console.log(rows);
             if(!err){
