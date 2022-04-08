@@ -57,7 +57,7 @@ router.get('/getsubmitforms',(req, res) => {
 router.get('/getsubmitforms/:id',(req, res) => {
     let submit_id = req.params.id;
 
-    db.query(`SELECT email, f_name, l_name, tel_num, gender, address, submit_id, form_name, form_specific, form_value, approval_order, submit_state, submit_refuse
+    db.query(`SELECT email, f_name, l_name, tel_num, gender, address, submit_id, form_name, form_specific, form_value, approval_order, submit_state, submit_refuse, submit_date
     FROM submitforms 
     INNER JOIN users ON users_id = users.user_id 
     JOIN forms ON forms_id = forms.form_id 
