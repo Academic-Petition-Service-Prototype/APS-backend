@@ -10,7 +10,7 @@ router.post('/getforms',(req, res) => {
     let role = req.body.role;
     let agency = req.body.agency;
     if (role === 'admin') {
-        db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,users_id,form_tag FROM forms 
+        db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,users_id,form_tag,form_detail FROM forms 
         INNER JOIN users on forms.users_id = user_id `,(err, rows, fields) => {
             console.log(rows);
             if(!err){
@@ -20,7 +20,7 @@ router.post('/getforms',(req, res) => {
             }
         })
     } else if(role === 'chief' || role === 'user'){
-        db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,users_id,form_tag FROM forms 
+        db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,users_id,form_tag,form_detail FROM forms 
         INNER JOIN users on forms.users_id = user_id 
         INNER JOIN agency on agency_id = users.agencies_id 
         AND agency.agency_name = ?`,agency,(err, rows, fields) => {
@@ -32,7 +32,7 @@ router.post('/getforms',(req, res) => {
             }
         })
     } else if(role === 'officer'){
-        db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,users_id,form_tag FROM forms 
+        db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,users_id,form_tag,form_detail FROM forms 
         WHERE users_id = ?`,user_id,(err, rows, fields) => {
             console.log(rows);
             if(!err){
@@ -69,6 +69,8 @@ router.post('/insertforms',(req, res) => {
     let created_by = req.body.users_id;
     let approval_name = req.body.approval_name;
     approval_name = JSON.stringify(approval_name);
+    let form_detail = req.body.form_detail;
+    let tag_form = req.body.tag_form;
     let form_status = 'active';
     let error = false;
 
@@ -78,24 +80,14 @@ router.post('/insertforms',(req, res) => {
     }
 
     if(!error){
-        db.query(
-            `SELECT form_id FROM forms WHERE form_name = ${db.escape(req.body.form_name)}`, 
-            (err, result) => {
-                if(result && result.length) { 
-                    //error
-                    res.send('ชื่อคำร้องนี้มีอยู่ในระบบแล้ว');
-                } else { //form name not in use
-                    db.query(`INSERT INTO forms (form_name, form_specific, created_date, approval_name, form_status, users_id) 
-                            VALUES ('${form_name}', '${form_specific}', now(), '${approval_name}', '${form_status}', '${created_by}');`,(err, result) => {
-                        if(!err){
-                            res.send('เพิ่มคำร้องใหม่สำเร็จ');
-                        } else {
-                            console.log(err)
-                        }
-                    })
-                }
+        db.query(`INSERT INTO forms (form_name, form_specific, created_date, approval_name, form_status, form_tag, form_detail, users_id) 
+                VALUES ('${form_name}', '${form_specific}', now(), '${approval_name}', '${form_status}', '${tag_form}', '${form_detail}', '${created_by}');`,(err, result) => {
+            if(!err){
+                res.send('เพิ่มคำร้องใหม่สำเร็จ');
+            } else {
+                console.log(err)
             }
-        );
+        })
     }
 })
 
