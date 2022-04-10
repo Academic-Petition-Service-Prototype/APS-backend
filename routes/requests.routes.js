@@ -12,7 +12,7 @@ router.post('/agencyrequests',(req, res) => {
     FROM requests
     INNER JOIN users
     ON requests.users_id = users.user_id
-    WHERE agencies_id = ?`,[agency_id],(err, rows, fields) => {
+    WHERE agencies_id = ? ORDER BY request_created DESC`,[agency_id],(err, rows, fields) => {
         if(!err){
             res.send(rows);
         } else {
@@ -23,7 +23,7 @@ router.post('/agencyrequests',(req, res) => {
 
 // Get all requests
 router.get('/requests',(req, res) => {
-    db.query('SELECT request_id, request_title, request_detail, request_state, request_created FROM requests',(err, rows, fields) => {
+    db.query('SELECT request_id, request_title, request_detail, request_state, request_created FROM requests ORDER BY request_created DESC',(err, rows, fields) => {
         console.log(rows);
         if(!err){
             res.send(rows);
