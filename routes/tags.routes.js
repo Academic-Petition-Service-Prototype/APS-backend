@@ -16,6 +16,23 @@ router.get('/tags',(req, res) => {
     })
 })
 
+// Get tags by agency
+router.post('/tagsbyagency',(req, res) => {
+    let agency_id = req.body.agency_id;
+    
+    db.query(`SELECT tag_id, tag_name
+    FROM tags
+    INNER JOIN users ON users_id = users.user_id 
+    WHERE agencies_id = ?`,agency_id,(err, rows, fields) => {
+        console.log(rows);
+        if(!err){
+            res.send(rows);
+        } else {
+            console.log(err)
+        }
+    })
+})
+
 // Get tags by id
 router.get('/tags/:id',(req, res) => {
     db.query('SELECT * FROM tags WHERE tag_id = ?',[req.params.id],(err, rows, fields) => {
