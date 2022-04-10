@@ -61,6 +61,7 @@ router.post('/reports',(req, res) => {
     let users_id = req.body.users_id;
     let report_title = req.body.report_title;
     let report_detail = req.body.report_detail;
+    let report_occur = req.body.report_occur;
     let errors = false;
     if((report_title.length === 0 || report_detail.length === 0) || (report_title.length == undefined || report_detail.length == undefined)){
         errors = true;
@@ -73,6 +74,7 @@ router.post('/reports',(req, res) => {
             report_detail: report_detail,
             report_state: 'unread',
             report_created: new Date(),
+            report_occur: report_occur,
             users_id: users_id
         }
         
