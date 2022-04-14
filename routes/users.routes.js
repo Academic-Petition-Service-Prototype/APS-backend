@@ -2,19 +2,35 @@ const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 const router = require('express').Router();
 
+
 // Database
 const db = require('../lib/connectdatabase');
 
 // Get all users
-router.get('/users',(req, res) => {
-    db.query('SELECT * FROM users',(err, rows, fields) => {
-        console.log(rows);
-        if(!err){
-            res.send(rows);
-        } else {
-            console.log(err)
-        }
-    })
+router.post('/getusers',(req, res) => {
+    let role = req.body.role;
+    let roletarget = req.body.roletarget;
+    if(role == 'admin'){
+        db.query(`SELECT user_id , registered, agency_name, CONCAT(f_name," ",l_name) AS fullname 
+        FROM users
+        INNER JOIN agency ON agency_id = users.agencies_id
+        WHERE role = ? ORDER BY agency_name DESC`,[roletarget],(err, rows, fields) => {
+            console.log(rows);
+            if(!err){
+                res.send(rows);
+            } else {
+                console.log(err)
+            }
+        })
+    }
+    // db.query('SELECT * FROM users',(err, rows, fields) => {
+    //     console.log(rows);
+    //     if(!err){
+    //         res.send(rows);
+    //     } else {
+    //         console.log(err)
+    //     }
+    // })
 })
 
 // Get users by id
@@ -24,7 +40,8 @@ router.get('/users/:id',(req, res) => {
         if(rows.length <= 0){
             res.send('ไม่พบผู้ใช้งานหมายเลข'+id+'ในฐานข้อมูล')
         } else {
-            res.send(rows);
+            console.log(rows[0]);
+            res.send(rows[0]);
         }
     })
 })
@@ -115,7 +132,7 @@ router.post('/users',(req, res) => {
     let tel_num = req.body.tel_num;
     let gender = req.body.gender;
     let address = req.body.address;
-    let img = req.body.img;
+    let img = req.files.img;
     let agencies_id = req.body.agencies_id;
     
     db.query(`SELECT user_id FROM users WHERE LOWER(email) = LOWER(${db.escape(req.body.email)})`, (err, result) => {
@@ -132,33 +149,50 @@ router.post('/users',(req, res) => {
                         message: err,
                     });
                 } else {
-                    let form_data = {
-                        email : email,
-                        password: hash,
-                        role : role,
-                        f_name : f_name,
-                        l_name: l_name,
-                        tel_num : tel_num,
-                        gender : gender,
-                        address: address,
-                        img: img,
-                        agencies_id : agencies_id
-                    }
-                    db.query(`INSERT INTO users SET ?`,[form_data],(err,result) => {
-                        if(err){
-                            throw err;
-                            return res.status(400).send({
-                                message:err,
-                            });
-                        }
-                        return res.status(201).send({
-                            message: "เพิ่มผู้ใช้งานสำเร็จ",
+                    if(role == 'chief'){
+                        var filename1 = img.name
+                        const filename = Date.now()+""+ filename1;
+                        const file = req.files.img;
+                        const chief_img = "/chief_img/"
+                        const URL = "/../avatar/"+chief_img+filename;
+                        let uploadPath = __dirname+URL;
+                        file.mv(uploadPath,(err)=>{
+                            if(err){
+                                errors = true;
+                                return res.send(err)
+                            }
                         })
-                    });
+
+                        let form_data = {
+                            email : email,
+                            password: hash,
+                            role : role,
+                            f_name : f_name,
+                            l_name: l_name,
+                            tel_num : tel_num,
+                            gender : gender,
+                            address: address,
+                            registered: new Date(),
+                            img: filename,
+                            agencies_id : agencies_id
+                        }
+
+                        db.query(`INSERT INTO users SET ?`,[form_data],(err,result) => {
+                            if(err){
+                                throw err;
+                                return res.status(400).send({
+                                    message:err,
+                                });
+                            }else{
+                                res.status(201).send('Add chief success')
+                            }
+                        });
+                    }
                 }
             });
         }
     });
+    
 })
 
 module.exports = router;
