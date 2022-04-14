@@ -20,12 +20,12 @@ router.get('/tags',(req, res) => {
 router.post('/tagsbyagency',(req, res) => {
     let agency_id = req.body.agency_id;
     
-    db.query(`SELECT tag_id, tag_name
-    FROM tags
-    INNER JOIN users ON users_id = users.user_id 
+    db.query(`SELECT tag_id, tag_name FROM forms 
+    INNER JOIN tags on forms.tags_id = tag_id 
+    INNER JOIN users on forms.users_id = user_id 
     WHERE agencies_id = ?`,agency_id,(err, rows, fields) => {
-        console.log(rows);
         if(!err){
+            console.log(rows);
             res.send(rows);
         } else {
             console.log(err)
@@ -82,7 +82,6 @@ router.delete('/tags/:id',(req, res) => {
 // Insert tag
 router.post('/tags',(req, res) => {
     let tag_name = req.body.tag_name;
-    let users_id = req.body.users_id;
     let agencies_id = req.body.agencies_id;
     let errors = false;
 
@@ -94,8 +93,9 @@ router.post('/tags',(req, res) => {
 
     if(!errors){
         db.query(
-            `SELECT * FROM tags
-            INNER JOIN users on tags.users_id = user_id 
+            `SELECT tag_id, tag_name FROM forms 
+            INNER JOIN tags on forms.tags_id = tag_id 
+            INNER JOIN users on forms.users_id = user_id 
             WHERE agencies_id = ? AND tag_name = ?`,[agencies_id,tag_name], 
             (err, result) => {
                 if(result && result.length) { 
