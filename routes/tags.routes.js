@@ -102,8 +102,8 @@ router.post('/tags',(req, res) => {
                     //error
                     res.send('แท็คนี้มีอยู่ในระบบของหน่วยงานแล้ว');
                 } else { //agency name not in use
-                    db.query(`INSERT INTO tags (tag_name, tag_created, users_id) 
-                    VALUES ('${tag_name}',now(),'${users_id}');`,(err, result) => {
+                    db.query(`INSERT INTO tags (tag_name, tag_created) 
+                    VALUES ('${tag_name}',now());`,(err, result) => {
                         if(!err){
                             res.send('เพิ่มแท็คสำเร็จ');
                         } else {
