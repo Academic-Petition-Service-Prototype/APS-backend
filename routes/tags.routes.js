@@ -20,9 +20,7 @@ router.get('/tags',(req, res) => {
 router.post('/tagsbyagency',(req, res) => {
     let agency_id = req.body.agency_id;
     
-    db.query(`SELECT tag_id, tag_name FROM forms 
-    INNER JOIN tags on forms.tags_id = tag_id 
-    INNER JOIN users on forms.users_id = user_id 
+    db.query(`SELECT tag_id, tag_name FROM tags 
     WHERE agencies_id = ?`,agency_id,(err, rows, fields) => {
         if(!err){
             console.log(rows);
@@ -52,7 +50,7 @@ router.post('/tags/:id', (req, res, next) => {
 
     if (tag_name.length === undefined){
         errors = true;
-        res.send('กรุณากรอกข้อมูลให้ครบ');
+        res.send('กรุณากรอกชื่อหมวดหมู่คำร้อง');
     }
 
     if(!errors){
@@ -61,7 +59,7 @@ router.post('/tags/:id', (req, res, next) => {
             if (err) {
                 res.send('เกิดข้อผิดพลาดในการอัพเดตแท็ค', err);
             } else {
-                res.send('อัพเดตแท็คสำเร็จ');
+                res.send('อัพเดตหมวดหมู่สำเร็จ');
 
             }
         })
@@ -72,7 +70,7 @@ router.post('/tags/:id', (req, res, next) => {
 router.delete('/tags/:id',(req, res) => {
     db.query('DELETE FROM tag WHERE tag_id = ?',[req.params.id],(err, rows, fields) => {
         if(!err){
-            res.send('ลบแท็คสำเสร็จ');
+            res.send('ลบหมวดหมู่สำเสร็จ');
         } else {
             console.log(err)
         }
@@ -100,12 +98,12 @@ router.post('/tags',(req, res) => {
             (err, result) => {
                 if(result && result.length) { 
                     //error
-                    res.send('แท็คนี้มีอยู่ในระบบของหน่วยงานแล้ว');
+                    res.send('หมวดหมู่นี้มีอยู่ในระบบของหน่วยงานแล้ว');
                 } else { //agency name not in use
-                    db.query(`INSERT INTO tags (tag_name, tag_created) 
-                    VALUES ('${tag_name}',now());`,(err, result) => {
+                    db.query(`INSERT INTO tags (tag_name, tag_created, agencies_id) 
+                    VALUES ('${tag_name}',now(),'${agencies_id}');`,(err, result) => {
                         if(!err){
-                            res.send('เพิ่มแท็คสำเร็จ');
+                            res.send('เพิ่มหมวดหมู่สำเร็จ');
                         } else {
                             console.log(err)
                         }
