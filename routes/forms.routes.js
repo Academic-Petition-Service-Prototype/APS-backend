@@ -20,7 +20,8 @@ router.post('/getforms',(req, res) => {
             }
         })
     } else if(role === 'chief' || role === 'user'){
-        db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,form_detail,users_id,tags_id FROM forms 
+        db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,form_detail,users_id,tag_id,tag_name FROM forms 
+        INNER JOIN tags on forms.tags_id = tag_id
         INNER JOIN users on forms.users_id = user_id 
         INNER JOIN agency on agency_id = users.agencies_id 
         AND agency.agency_name = ?`,agency,(err, rows, fields) => {
