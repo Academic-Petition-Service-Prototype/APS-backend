@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const fileUpload = require("express-fileupload");
 
 //import routes
 const authentication = require('./routes/authentication.routes');
@@ -22,6 +23,11 @@ app.disable('x-powered-by');
 
 // CORS
 app.use(cors());
+// express-fileupload
+app.use(fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+}));
+app.use(express.static("./avatar"))
 
 // Router
 app.use('/api', authentication);

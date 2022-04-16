@@ -6,7 +6,7 @@ const db = require('../lib/connectdatabase');
 
 // Get all agency
 router.get('/agency',(req, res) => {
-    db.query('SELECT * FROM agency',(err, rows, fields) => {
+    db.query(`SELECT * FROM agency WHERE agency_name NOT LIKE '%admin%'`,(err, rows, fields) => {
         console.log(rows);
         if(!err){
             res.send(rows);
