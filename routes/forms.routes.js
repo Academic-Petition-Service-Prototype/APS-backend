@@ -62,6 +62,21 @@ router.get('/forms/:id',(req, res) => {
     })
 })
 
+// Change status form
+router.put('/changestatusforms',(req, res) => {
+    let form_id = req.body.form_id;
+    let form_status = req.body.form_status;
+    db.query(`UPDATE forms SET form_status = ? WHERE forms.form_id = ?;`,[form_status,form_id],(err, rows, fields) => {
+        if(!err){
+            console.log('Change status form success')
+            res.send('Change state success');
+        } else {
+            console.log('Change status form fail')
+            res.send(err);
+        }
+    })
+})
+
 // Insert forms
 router.post('/insertforms',(req, res) => {
     let form_name = req.body.form_name;
