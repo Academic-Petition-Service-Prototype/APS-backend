@@ -19,7 +19,20 @@ router.post('/getforms',(req, res) => {
                 console.log(err)
             }
         })
-    } else if(role === 'chief' || role === 'user'){
+    } else if(role === 'chief'){
+        db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,form_detail,users_id,tag_id,tag_name FROM forms 
+        INNER JOIN tags on forms.tags_id = tag_id
+        INNER JOIN users on forms.users_id = user_id 
+        INNER JOIN agency on agency_id = users.agencies_id 
+        AND agency.agency_name = ?`,agency,(err, rows, fields) => {
+            console.log(rows);
+            if(!err){
+                res.send(rows);
+            } else {
+                console.log(err)
+            }
+        })
+    }else if(role === 'user'){
         db.query(`SELECT form_id,form_name,form_specific,created_date,approval_name,form_status,form_detail,users_id,tag_id,tag_name FROM forms 
         INNER JOIN tags on forms.tags_id = tag_id
         INNER JOIN users on forms.users_id = user_id 
