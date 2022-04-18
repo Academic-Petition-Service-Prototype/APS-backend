@@ -24,7 +24,7 @@ router.post('/getforms',(req, res) => {
         INNER JOIN tags on forms.tags_id = tag_id
         INNER JOIN users on forms.users_id = user_id 
         INNER JOIN agency on agency_id = users.agencies_id 
-        AND agency.agency_name = ?`,agency,(err, rows, fields) => {
+        AND agency.agency_name = ? AND form_status = 1`,agency,(err, rows, fields) => {
             console.log(rows);
             if(!err){
                 res.send(rows);
