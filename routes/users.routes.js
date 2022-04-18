@@ -10,11 +10,24 @@ const db = require('../lib/connectdatabase');
 router.post('/getusers',(req, res) => {
     let role = req.body.role;
     let roletarget = req.body.roletarget;
+    let agency_id = req.body.agency_id;
     if(role == 'admin'){
         db.query(`SELECT user_id , registered, agency_name, CONCAT(f_name," ",l_name) AS fullname 
         FROM users
         INNER JOIN agency ON agency_id = users.agencies_id
         WHERE role = ? ORDER BY agency_name DESC`,[roletarget],(err, rows, fields) => {
+            console.log(rows);
+            if(!err){
+                res.send(rows);
+            } else {
+                console.log(err)
+            }
+        })
+    } else if(role == 'chief'){
+        db.query(`SELECT user_id, gender, registered, agency_name, CONCAT(f_name," ",l_name) AS fullname 
+        FROM users
+        INNER JOIN agency ON agency_id = users.agencies_id
+        WHERE role = ? AND agencies_id = ? ORDER BY agency_name DESC`,[roletarget, agency_id],(err, rows, fields) => {
             console.log(rows);
             if(!err){
                 res.send(rows);
