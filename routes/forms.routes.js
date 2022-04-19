@@ -135,6 +135,17 @@ router.patch('/forms/:id', (req, res, next) => {
     }
 })
 
+// Delete form by id
+router.delete('/forms/:id',(req, res) => {
+    db.query('DELETE FROM forms WHERE form_id = ?',[req.params.id],(err, rows, fields) => {
+        if(!err){
+            res.send('Delete petition success');
+        } else {
+            console.log(err)
+        }
+    })
+})
+
 // Insert forms
 router.post('/insertforms',(req, res) => {
     let form_name = req.body.form_name;
