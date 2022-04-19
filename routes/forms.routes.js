@@ -117,7 +117,7 @@ router.patch('/forms/:id', (req, res, next) => {
             tags_id: tags_id,
         }
 
-        db.query(`UPDATE users SET ? WHERE user_id = ?`,[form_data,req.params.id],(err, result) => {
+        db.query(`UPDATE forms SET ? WHERE form_id = ?`,[form_data,req.params.id],(err, result) => {
             if(!err){
                 res.send('แก้ไขคำร้องใหม่สำเร็จ');
                 console.log(result)
