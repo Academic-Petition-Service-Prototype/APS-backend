@@ -100,7 +100,7 @@ router.post('/insertforms',(req, res) => {
     approval_name = JSON.stringify(approval_name);
     let form_detail = req.body.form_detail;
     let tags_id = req.body.tag_id;
-    let form_status = 'active';
+    let form_status = 1;
     let error = false;
 
     if(form_name == undefined){
@@ -113,6 +113,7 @@ router.post('/insertforms',(req, res) => {
                 VALUES ('${form_name}', '${form_specific}', now(), '${approval_name}', '${form_status}', '${form_detail}', '${created_by}', '${tags_id}');`,(err, result) => {
             if(!err){
                 res.send('เพิ่มคำร้องใหม่สำเร็จ');
+                console.log(result)
             } else {
                 console.log(err)
             }
