@@ -92,6 +92,42 @@ router.put('/changestatusforms',(req, res) => {
     })
 })
 
+//update form by id
+router.patch('/forms/:id', (req, res, next) => {
+    let form_name = req.body.form_name;
+    let form_specific = req.body.form_specific;
+    form_specific = JSON.stringify(form_specific);
+    let approval_name = req.body.approval_name;
+    approval_name = JSON.stringify(approval_name);
+    let form_detail = req.body.form_detail;
+    let tags_id = req.body.tag_id;
+    let error = false;
+
+    if(form_name == undefined){
+        error = true;
+        res.send('กรุณากรอกชื่อคำร้อง');
+    }
+
+    if(!error){
+        let form_data = {
+            form_name : form_name,
+            form_specific: form_specific,
+            approval_name : approval_name,
+            form_detail : form_detail,
+            tags_id: tags_id,
+        }
+
+        db.query(`UPDATE users SET ? WHERE user_id = ?`,[form_data,req.params.id],(err, result) => {
+            if(!err){
+                res.send('แก้ไขคำร้องใหม่สำเร็จ');
+                console.log(result)
+            } else {
+                console.log(err)
+            }
+        })
+    }
+})
+
 // Insert forms
 router.post('/insertforms',(req, res) => {
     let form_name = req.body.form_name;
