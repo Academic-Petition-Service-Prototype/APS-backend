@@ -64,11 +64,13 @@ router.post('/getforms',(req, res) => {
 
 // Get form by id
 router.get('/forms/:id',(req, res) => {
-    let id = req.params.id;
-    db.query('SELECT * FROM forms WHERE form_id = ?',[req.params.id],(err, rows, fields) => {
+    let form_id = req.params.id;
+    db.query(`SELECT  form_id, form_name, form_specific, approval_name, form_detail, tag_id, tag_name FROM forms 
+    INNER JOIN tags on forms.tags_id = tag_id 
+    WHERE form_id = ?`,[form_id],(err, rows, fields) => {
         console.log(rows);
         if(rows.length <= 0){
-            res.send('Petition not found with id = ' + id)
+            res.send('Petition not found with id = ' + form_id)
         } else {
             res.send(rows[0]);
         }
