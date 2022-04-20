@@ -6,7 +6,7 @@ const db = require('../lib/connectdatabase');
 
 // Get all agency
 router.get('/agency',(req, res) => {
-    db.query('SELECT * FROM agency',(err, rows, fields) => {
+    db.query(`SELECT * FROM agency WHERE agency_name NOT LIKE '%admin%'`,(err, rows, fields) => {
         console.log(rows);
         if(!err){
             res.send(rows);
@@ -22,20 +22,20 @@ router.get('/agency/:id',(req, res) => {
         if(rows.length <= 0){
             res.status(409).send('ไม่พบหน่วยงานหมายเลข'+req.params.id+'ในฐานข้อมูล')
         } else {
-            res.send(rows);
+            res.send(rows[0]);
         }
     })
 })
 
 //update agency by id
-router.post('/agency/:id', (req, res, next) => {
+router.patch('/agency/:id', (req, res, next) => {
     let agency_id = req.params.id;
-    let agency_name = req.body.agency_name;
+    let agency_name = req.body.data.agency_name;
     let errors = false;
-
-    if (agency_name.length === 0){
+    console.log(agency_name)
+    if (agency_name === undefined){
         errors = true;
-        res.send('กรุณากรอกข้อมูลให้ครบ');
+        res.send('กรุณากรอกชื่อหน่วยงาน');
     }
 
     if(!errors){
@@ -67,10 +67,10 @@ router.post('/agency',(req, res) => {
     let agency_name = req.body.agency_name;
     let errors = false;
 
-    if(agency_name.length === 0){
+    if(agency_name.length === 0 || agency_name.length === undefined){
         errors = true;
         // res.send('Please fill your information');
-        res.status(409).send('กรุณากรอกข้อมูลให้ครบ');
+        res.send('กรุณากรอกชื่อหน่วยงาน');
     }
 
     if(!errors){

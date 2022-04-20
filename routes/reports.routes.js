@@ -12,7 +12,7 @@ router.post('/agencyreports',(req, res) => {
     FROM reports
     INNER JOIN users
     ON reports.users_id = users.user_id
-    WHERE agencies_id = ?`,[agency_id],(err, rows, fields) => {
+    WHERE agencies_id = ? ORDER BY report_created DESC`,[agency_id],(err, rows, fields) => {
         if(!err){
             res.send(rows);
         } else {
@@ -23,7 +23,7 @@ router.post('/agencyreports',(req, res) => {
 
 // Get all reports
 router.get('/reports',(req, res) => {
-    db.query('SELECT report_id, report_title, report_detail, report_state, report_created FROM reports',(err, rows, fields) => {
+    db.query('SELECT report_id, report_title, report_detail, report_state, report_created FROM reports ORDER BY report_created DESC',(err, rows, fields) => {
         console.log(rows);
         if(!err){
             res.send(rows);
@@ -61,6 +61,7 @@ router.post('/reports',(req, res) => {
     let users_id = req.body.users_id;
     let report_title = req.body.report_title;
     let report_detail = req.body.report_detail;
+    let report_occur = req.body.report_occur;
     let errors = false;
     if((report_title.length === 0 || report_detail.length === 0) || (report_title.length == undefined || report_detail.length == undefined)){
         errors = true;
@@ -73,6 +74,7 @@ router.post('/reports',(req, res) => {
             report_detail: report_detail,
             report_state: 'unread',
             report_created: new Date(),
+            report_occur: report_occur,
             users_id: users_id
         }
         

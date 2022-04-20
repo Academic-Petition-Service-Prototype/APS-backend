@@ -12,7 +12,24 @@ router.post('/getsubmitforms',(req, res) => {
     FROM submitforms 
     FULL JOIN users ON users_id = users.user_id 
     JOIN forms ON forms_id = forms.form_id 
-    WHERE approval_name LIKE ?`,user_id,(err, rows, fields) => {
+    WHERE approval_name LIKE ? ORDER BY submit_date DESC`,user_id,(err, rows, fields) => {
+        if(!err){
+            res.send(rows);
+        } else {
+            console.log(err)
+        }
+    })
+})
+
+// Get submitforms by user
+router.post('/getsubmitformsbyuser',(req, res) => {
+    let user_id = req.body.user_id;
+
+    db.query(`SELECT submit_id, submit_date, approval_order, submit_state, form_name, submit_refuse, CONCAT(f_name," ",l_name) AS fullname
+    FROM submitforms 
+    FULL JOIN users ON users_id = users.user_id 
+    JOIN forms ON forms_id = forms.form_id 
+    WHERE user_id = ? ORDER BY submit_date DESC`,user_id,(err, rows, fields) => {
         if(!err){
             res.send(rows);
         } else {
@@ -29,7 +46,7 @@ router.post('/getsubmitformsbyagency',(req, res) => {
     FROM submitforms 
     FULL JOIN users ON users_id = users.user_id 
     JOIN forms ON forms_id = forms.form_id 
-    WHERE agencies_id = ?`,agency_id,(err, rows, fields) => {
+    WHERE agencies_id = ? ORDER BY submit_date DESC`,agency_id,(err, rows, fields) => {
         if(!err){
             res.send(rows);
         } else {
@@ -43,7 +60,7 @@ router.get('/getsubmitforms',(req, res) => {
     db.query(`SELECT submit_id, submit_date, approval_order, submit_state, submit_refuse, form_name, CONCAT(f_name," ",l_name) AS fullname
     FROM submitforms 
     INNER JOIN users ON users_id = users.user_id 
-    JOIN forms ON forms_id = forms.form_id`,(err, rows, fields) => {
+    JOIN forms ON forms_id = forms.form_id ORDER BY submit_date DESC`,(err, rows, fields) => {
         if(!err){
             res.send(rows);
             console.log(rows)
@@ -57,7 +74,7 @@ router.get('/getsubmitforms',(req, res) => {
 router.get('/getsubmitforms/:id',(req, res) => {
     let submit_id = req.params.id;
 
-    db.query(`SELECT email, f_name, l_name, tel_num, gender, address, submit_id, form_name, form_specific, form_value, approval_order, submit_state
+    db.query(`SELECT email, f_name, l_name, tel_num, gender, address, submit_id, form_name, form_specific, form_value, approval_order, submit_state, submit_refuse, submit_date
     FROM submitforms 
     INNER JOIN users ON users_id = users.user_id 
     JOIN forms ON forms_id = forms.form_id 

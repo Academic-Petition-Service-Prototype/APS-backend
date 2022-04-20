@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const fileUpload = require("express-fileupload");
 
 //import routes
 const authentication = require('./routes/authentication.routes');
@@ -8,6 +9,8 @@ const agency = require('./routes/agency.routes');
 const reports = require('./routes/reports.routes');
 const forms = require('./routes/forms.routes');
 const submitforms = require('./routes/submitforms.routes');
+const requests = require('./routes/requests.routes');
+const tags = require('./routes/tags.routes');
 
 // middleware
 const verifyToken = require('./middleware/authentication.middleware');
@@ -20,6 +23,11 @@ app.disable('x-powered-by');
 
 // CORS
 app.use(cors());
+// express-fileupload
+app.use(fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+}));
+app.use(express.static("./avatar"))
 
 // Router
 app.use('/api', authentication);
@@ -29,5 +37,7 @@ app.use('/api',agency);
 app.use('/api',reports);
 app.use('/api',forms);
 app.use('/api',submitforms);
+app.use('/api',requests);
+app.use('/api',tags);
 
 module.exports = app;
