@@ -35,7 +35,7 @@ router.get('/reports',(req, res) => {
 
 // Get report by id
 router.get('/reports/:id',(req, res) => {
-    db.query('SELECT report_id, report_title, report_detail, report_state, report_created FROM reports WHERE report_id = ?',[req.params.id],(err, rows, fields) => {
+    db.query('SELECT report_id, report_title, report_detail, report_occur, report_created FROM reports WHERE report_id = ?',[req.params.id],(err, rows, fields) => {
         console.log(rows)
         if(rows.length <= 0){
             res.send('Report not found with id = ' + req.params.id)

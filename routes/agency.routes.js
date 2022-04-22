@@ -20,7 +20,7 @@ router.get('/agency',(req, res) => {
 router.get('/agency/:id',(req, res) => {
     db.query('SELECT * FROM agency WHERE agency_id = ?',[req.params.id],(err, rows, fields) => {
         if(rows.length <= 0){
-            res.status(409).send('ไม่พบหน่วยงานหมายเลข'+req.params.id+'ในฐานข้อมูล')
+            res.send('ไม่พบหน่วยงานหมายเลข'+req.params.id+'ในฐานข้อมูล')
         } else {
             res.send(rows[0]);
         }

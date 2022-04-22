@@ -104,15 +104,13 @@ router.patch('/users/:id', (req, res, next) => {
         db.query(`SELECT user_id FROM users WHERE LOWER(email) = LOWER(${db.escape(req.body.email)})`, (err, result) => {
             if(result && result.length) { 
                 //error
-                return res.status(409).send({
-                    message: 'อีเมลนี้มีอยู่ในระบบแล้ว'
-                });
+                return res.send('อีเมลนี้มีอยู่ในระบบแล้ว');
             } else {
                 if(req.body.password === undefined || req.body.password === "" || req.body.password === null) {
                     // update query
                     db.query('UPDATE users SET ? WHERE user_id = ' + id, form_data, (err,result) => {
                         if (err) {
-                            res.status(400).send('เกิดข้อผิดพลาดในการอัพเดตข้อมูลผู้ใช้งาน', err);
+                            res.send('เกิดข้อผิดพลาดในการอัพเดตข้อมูลผู้ใช้งาน', err);
                         } else {
                             console.log(result)
                             res.send('อัพเดตข้อมูลสำเร็จ');
@@ -140,8 +138,7 @@ router.patch('/users/:id', (req, res, next) => {
                             // update query
                             db.query('UPDATE users SET ? WHERE user_id = ' + id, form_data, (err,result) => {
                                 if (err) {
-                                    throw err;
-                                    res.status(400).send(err);
+                                    res.send(err);
                                 } else {
                                     console.log(result)
                                     res.send('อัพเดตข้อมูลสำเร็จ');
@@ -182,16 +179,13 @@ router.patch('/users/:id', (req, res, next) => {
             db.query(`SELECT user_id FROM users WHERE LOWER(email) = LOWER(${db.escape(req.body.email)})`, (err, result) => {
                 if(result && result.length) { 
                     //error
-                    return res.status(409).send({
-                        message: 'อีเมลนี้มีอยู่ในระบบแล้ว'
-                    });
+                    return res.send('อีเมลนี้มีอยู่ในระบบแล้ว');
                 } else {
                     if(req.body.password === undefined || req.body.password === "" || req.body.password === null) {
                         // update query
                         db.query('UPDATE users SET ? WHERE user_id = ' + id, form_data, (err,result) => {
                             if (err) {
-                                throw err;
-                                res.status(400).send('เกิดข้อผิดพลาดในการอัพเดตข้อมูลผู้ใช้งาน', err);
+                                res.send('เกิดข้อผิดพลาดในการอัพเดตข้อมูลผู้ใช้งาน', err);
                             } else {
                                 console.log(result)
                                 res.send('อัพเดตข้อมูลสำเร็จ');
@@ -220,8 +214,7 @@ router.patch('/users/:id', (req, res, next) => {
                                 // update query
                                 db.query('UPDATE users SET ? WHERE user_id = ' + id, form_data, (err,result) => {
                                     if (err) {
-                                        throw err;
-                                        res.status(400).send(err);
+                                        res.send(err);
                                     } else {
                                         res.send('อัพเดตข้อมูลสำเร็จ');
                                     }
@@ -319,89 +312,11 @@ router.post('/users',(req, res) => {
 
                     db.query(`INSERT INTO users SET ?`,[form_data],(err,result) => {
                         if(err){
-                            throw err;
-                            return res.status(400).send({
-                                message:err,
-                            });
+                            return res.send(err);
                         }else{
-                            res.status(201).send('Add ' + role + ' success')
+                            res.send('Add ' + role + ' success')
                         }
                     });
-                    // if(role == 'chief'){
-                    //     var filename1 = img.name
-                    //     const filename = Date.now()+""+ filename1;
-                    //     const file = req.files.img;
-                    //     const chief_img = "/chief_img/"
-                    //     const URL = "/../avatar/"+chief_img+filename;
-                    //     let uploadPath = __dirname+URL;
-                    //     file.mv(uploadPath,(err)=>{
-                    //         if(err){
-                    //             return res.send(err)
-                    //         }
-                    //     })
-
-                    //     let form_data = {
-                    //         email : email,
-                    //         password: hash,
-                    //         role : role,
-                    //         f_name : f_name,
-                    //         l_name: l_name,
-                    //         tel_num : tel_num,
-                    //         gender : gender,
-                    //         address: address,
-                    //         registered: new Date(),
-                    //         img: filename,
-                    //         agencies_id : agencies_id
-                    //     }
-
-                    //     db.query(`INSERT INTO users SET ?`,[form_data],(err,result) => {
-                    //         if(err){
-                    //             throw err;
-                    //             return res.status(400).send({
-                    //                 message:err,
-                    //             });
-                    //         }else{
-                    //             res.status(201).send('Add chief success')
-                    //         }
-                    //     });
-                    // } else if(role == 'secretary'){
-                    //     var filename1 = img.name
-                    //     const filename = Date.now()+""+ filename1;
-                    //     const file = req.files.img;
-                    //     const secretary_img = "/secretary_img/"
-                    //     const URL = "/../avatar/"+secretary_img+filename;
-                    //     let uploadPath = __dirname+URL;
-                    //     file.mv(uploadPath,(err)=>{
-                    //         if(err){
-                    //             return res.send(err)
-                    //         }
-                    //     })
-
-                    //     let form_data = {
-                    //         email : email,
-                    //         password: hash,
-                    //         role : role,
-                    //         f_name : f_name,
-                    //         l_name: l_name,
-                    //         tel_num : tel_num,
-                    //         gender : gender,
-                    //         address: address,
-                    //         registered: new Date(),
-                    //         img: filename,
-                    //         agencies_id : agencies_id
-                    //     }
-
-                    //     db.query(`INSERT INTO users SET ?`,[form_data],(err,result) => {
-                    //         if(err){
-                    //             throw err;
-                    //             return res.status(400).send({
-                    //                 message:err,
-                    //             });
-                    //         }else{
-                    //             res.status(201).send('Add secretary success')
-                    //         }
-                    //     });
-                    // }
                 }
             });
         }
