@@ -16,9 +16,7 @@ router.post("/sign-up", validateResgister, (req,res,next) => {
     (err, result) => {
         if(result && result.length) { 
             //error
-            return res.status(409).send({
-                message: 'This username is already in use!'
-            });
+            return res.send('This username is already in use!');
         } else { //username not in use
             bcrypt.hash(req.body.password, 10, (err,hash) => {
                 if(err) {

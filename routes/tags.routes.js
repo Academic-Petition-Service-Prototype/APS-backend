@@ -35,7 +35,7 @@ router.post('/tagsbyagency',(req, res) => {
 router.get('/tags/:id',(req, res) => {
     db.query('SELECT * FROM tags WHERE tag_id = ?',[req.params.id],(err, rows, fields) => {
         if(rows.length <= 0){
-            res.status(409).send('ไม่พบแท็คหมายเลข'+req.params.id+'ในฐานข้อมูล')
+            res.send('ไม่พบแท็คหมายเลข'+req.params.id+'ในฐานข้อมูล')
         } else {
             res.send(rows);
         }
@@ -86,7 +86,7 @@ router.post('/tags',(req, res) => {
     if(tag_name.length === undefined){
         errors = true;
         // res.send('Please fill your information');
-        res.status(409).send('กรุณากรอกชื่อหมวดหมู่คำร้อง');
+        res.send('กรุณากรอกชื่อหมวดหมู่คำร้อง');
     }
 
     if(!errors){

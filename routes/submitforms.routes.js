@@ -38,6 +38,23 @@ router.post('/getsubmitformsbyuser',(req, res) => {
     })
 })
 
+// Get submitforms by officer created
+router.post('/getsubmitformsbyofficer',(req, res) => {
+    let user_id = req.body.user_id;
+
+    db.query(`SELECT submit_id, submit_date, approval_order, submit_state, form_name, submit_refuse, CONCAT(f_name," ",l_name) AS fullname
+    FROM submitforms 
+    INNER JOIN forms ON forms_id = forms.form_id
+    JOIN users ON user_id = forms.users_id 
+    WHERE user_id = 5 ORDER BY submit_date DESC`,user_id,(err, rows, fields) => {
+        if(!err){
+            res.send(rows);
+        } else {
+            console.log(err)
+        }
+    })
+})
+
 // Get submitforms by agency
 router.post('/getsubmitformsbyagency',(req, res) => {
     let agency_id = req.body.agency_id;
