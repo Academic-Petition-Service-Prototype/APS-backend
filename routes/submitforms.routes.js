@@ -136,14 +136,13 @@ router.post('/submitforms',(req, res) => {
     form_value = JSON.stringify(form_value);
     let approval_order = req.body.approval_order;
     approval_order = JSON.stringify(approval_order);
-    let submit_date = new Date();
     let submit_state = 1;
     let errors = false;
 
     if(!errors){
         let form_data = {
             form_value: form_value,
-            submit_date: submit_date,
+            submit_date: new Date(),
             submit_state: submit_state,
             approval_order: approval_order,
             users_id: users_id,

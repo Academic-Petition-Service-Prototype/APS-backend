@@ -37,7 +37,8 @@ router.get('/tags/:id',(req, res) => {
         if(rows.length <= 0){
             res.send('ไม่พบแท็คหมายเลข'+req.params.id+'ในฐานข้อมูล')
         } else {
-            res.send(rows);
+            console.log(rows[0])
+            res.send(rows[0]);
         }
     })
 })
@@ -68,9 +69,9 @@ router.post('/tags/:id', (req, res, next) => {
 
 // Delete tags by id
 router.delete('/tags/:id',(req, res) => {
-    db.query('DELETE FROM tag WHERE tag_id = ?',[req.params.id],(err, rows, fields) => {
+    db.query('DELETE FROM tags WHERE tag_id = ?',[req.params.id],(err, rows, fields) => {
         if(!err){
-            res.send('ลบหมวดหมู่สำเสร็จ');
+            res.send('ลบหมวดหมู่สำเร็จ');
         } else {
             console.log(err)
         }
@@ -80,7 +81,6 @@ router.delete('/tags/:id',(req, res) => {
 // Insert tag
 router.post('/tags',(req, res) => {
     let tag_name = req.body.tag_name;
-    let tag_created = new Date();
     let agencies_id = req.body.agencies_id;
     let errors = false;
 
@@ -101,8 +101,12 @@ router.post('/tags',(req, res) => {
                     //error
                     res.send('หมวดหมู่นี้มีอยู่ในระบบของหน่วยงานแล้ว');
                 } else { //agency name not in use
-                    db.query(`INSERT INTO tags (tag_name, tag_created, agencies_id) 
-                    VALUES ('${tag_name}','${tag_created}','${agencies_id}');`,(err, result) => {
+                    let form_data = {
+                        tag_name: tag_name,
+                        tag_created: new Date(),
+                        agencies_id: agencies_id,
+                    }
+                    db.query(`INSERT INTO tags SET ?`,[form_data],(err, result) => {
                         if(!err){
                             res.send('เพิ่มหมวดหมู่สำเร็จ');
                         } else {
