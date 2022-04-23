@@ -78,7 +78,8 @@ router.post("/login",(req,res,next) => {
                 'SECRETKEY',{
                     expiresIn: "7d"
                 });
-                db.query(`UPDATE users SET last_login = now() WHERE user_id = '${result[0].user_id}';`);
+                let last_login = new Date();
+                db.query(`UPDATE users SET last_login = '${last_login}' WHERE user_id = '${result[0].user_id}';`);
                 return res.status(200).send({
                     message: 'Logged in!',
                     token,

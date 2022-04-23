@@ -65,6 +65,7 @@ router.delete('/agency/:id',(req, res) => {
 // Insert agency
 router.post('/agency',(req, res) => {
     let agency_name = req.body.agency_name;
+    let agency_created = new Date();
     let errors = false;
 
     if(agency_name.length === 0 || agency_name.length === undefined){
@@ -82,7 +83,7 @@ router.post('/agency',(req, res) => {
                     res.send('หน่วยงานนี้มีอยู่ในระบบแล้ว');
                 } else { //agency name not in use
                     db.query(`INSERT INTO agency (agency_name, agency_created) 
-                    VALUES ('${agency_name}',now());`,(err, result) => {
+                    VALUES ('${agency_name}','${agency_created}');`,(err, result) => {
                         if(!err){
                             res.send('เพิ่มหน่วยงานสำเสร็จ');
                         } else {
