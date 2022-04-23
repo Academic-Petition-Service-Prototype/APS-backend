@@ -80,6 +80,7 @@ router.delete('/tags/:id',(req, res) => {
 // Insert tag
 router.post('/tags',(req, res) => {
     let tag_name = req.body.tag_name;
+    let tag_created = new Date();
     let agencies_id = req.body.agencies_id;
     let errors = false;
 
@@ -101,7 +102,7 @@ router.post('/tags',(req, res) => {
                     res.send('หมวดหมู่นี้มีอยู่ในระบบของหน่วยงานแล้ว');
                 } else { //agency name not in use
                     db.query(`INSERT INTO tags (tag_name, tag_created, agencies_id) 
-                    VALUES ('${tag_name}',now(),'${agencies_id}');`,(err, result) => {
+                    VALUES ('${tag_name}',${tag_created}),'${agencies_id}');`,(err, result) => {
                         if(!err){
                             res.send('เพิ่มหมวดหมู่สำเร็จ');
                         } else {

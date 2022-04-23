@@ -149,6 +149,7 @@ router.delete('/forms/:id',(req, res) => {
 router.post('/insertforms',(req, res) => {
     let form_name = req.body.form_name;
     let form_specific = req.body.form_specific;
+    let created_date = new Date();
     form_specific = JSON.stringify(form_specific);
     let created_by = req.body.users_id;
     let approval_name = req.body.approval_name;
@@ -165,7 +166,7 @@ router.post('/insertforms',(req, res) => {
 
     if(!error){
         db.query(`INSERT INTO forms (form_name, form_specific, created_date, approval_name, form_status, form_detail, users_id, tags_id) 
-                VALUES ('${form_name}', '${form_specific}', now(), '${approval_name}', '${form_status}', '${form_detail}', '${created_by}', '${tags_id}');`,(err, result) => {
+                VALUES ('${form_name}', '${form_specific}', '${created_date}', '${approval_name}', '${form_status}', '${form_detail}', '${created_by}', '${tags_id}');`,(err, result) => {
             if(!err){
                 res.send('เพิ่มคำร้องใหม่สำเร็จ');
                 console.log(result)
