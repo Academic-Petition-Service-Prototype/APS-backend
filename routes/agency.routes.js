@@ -6,7 +6,7 @@ const db = require('../lib/connectdatabase');
 
 // Get all agency
 router.get('/agency',(req, res) => {
-    db.query(`SELECT * FROM agency WHERE agency_name NOT LIKE '%admin%'`,(err, rows, fields) => {
+    db.query(`SELECT * FROM agency WHERE agency_name NOT LIKE '%admin%' ORDER BY agency_created DESC`,(err, rows, fields) => {
         console.log(rows);
         if(!err){
             res.send(rows);
@@ -55,7 +55,7 @@ router.patch('/agency/:id', (req, res, next) => {
 router.delete('/agency/:id',(req, res) => {
     db.query('DELETE FROM agency WHERE agency_id = ?',[req.params.id],(err, rows, fields) => {
         if(!err){
-            res.send('ลบหน่วยงานสำเสร็จ');
+            res.send('ลบหน่วยงานสำเร็จ');
         } else {
             console.log(err)
         }
@@ -65,7 +65,6 @@ router.delete('/agency/:id',(req, res) => {
 // Insert agency
 router.post('/agency',(req, res) => {
     let agency_name = req.body.agency_name;
-    let agency_created = new Date();
     let errors = false;
 
     if(agency_name.length === 0 || agency_name.length === undefined){
@@ -82,10 +81,13 @@ router.post('/agency',(req, res) => {
                     //error
                     res.send('หน่วยงานนี้มีอยู่ในระบบแล้ว');
                 } else { //agency name not in use
-                    db.query(`INSERT INTO agency (agency_name, agency_created) 
-                    VALUES ('${agency_name}','${agency_created}');`,(err, result) => {
+                    let form_data = {
+                        agency_name: agency_name,
+                        agency_created: new Date(),
+                    }
+                    db.query(`INSERT INTO agency SET ?`,[form_data],(err, result) => {
                         if(!err){
-                            res.send('เพิ่มหน่วยงานสำเสร็จ');
+                            res.send('เพิ่มหน่วยงานสำเร็จ');
                         } else {
                             console.log(err)
                         }

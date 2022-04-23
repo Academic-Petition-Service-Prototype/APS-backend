@@ -27,7 +27,7 @@ router.post('/getusers',(req, res) => {
         db.query(`SELECT user_id, gender, registered, agency_name, CONCAT(f_name," ",l_name) AS fullname 
         FROM users
         INNER JOIN agency ON agency_id = users.agencies_id
-        WHERE role = ? AND agencies_id = ? ORDER BY agency_name DESC`,[roletarget, agency_id],(err, rows, fields) => {
+        WHERE role = ? AND agencies_id = ? ORDER BY registered DESC`,[roletarget, agency_id],(err, rows, fields) => {
             console.log(rows);
             if(!err){
                 res.send(rows);
@@ -106,9 +106,9 @@ router.patch('/users/:id', (req, res, next) => {
                 //error
                 return res.send('อีเมลนี้มีอยู่ในระบบแล้ว');
             } else {
-                if(req.body.password === undefined || req.body.password === "" || req.body.password === null) {
+                if(req.body.password == undefined || req.body.password == "" || req.body.password == null || password == 'undefined') {
                     // update query
-                    db.query('UPDATE users SET ? WHERE user_id = ' + id, form_data, (err,result) => {
+                    db.query(`UPDATE users SET ? WHERE user_id = ?` ,[form_data,id], (err,result) => {
                         if (err) {
                             res.send('เกิดข้อผิดพลาดในการอัพเดตข้อมูลผู้ใช้งาน', err);
                         } else {
@@ -150,6 +150,7 @@ router.patch('/users/:id', (req, res, next) => {
             }
         });
     } else {
+        console.log('test33333')
         let img = req.files.img;
         if(!errors){
             var filename1 = img.name
@@ -181,7 +182,7 @@ router.patch('/users/:id', (req, res, next) => {
                     //error
                     return res.send('อีเมลนี้มีอยู่ในระบบแล้ว');
                 } else {
-                    if(req.body.password === undefined || req.body.password === "" || req.body.password === null) {
+                    if(req.body.password === undefined || req.body.password === "" || req.body.password === null || password == 'undefined') {
                         // update query
                         db.query('UPDATE users SET ? WHERE user_id = ' + id, form_data, (err,result) => {
                             if (err) {
