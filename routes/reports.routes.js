@@ -21,6 +21,23 @@ router.post('/agencyreports',(req, res) => {
     })
 })
 
+// Get all report by user sent
+router.post('/userreports',(req, res) => {
+    user_id = req.body.user_id;
+    
+    db.query(`SELECT report_id, report_title, report_detail, report_state, report_created
+    FROM reports
+    INNER JOIN users
+    ON reports.users_id = users.user_id
+    WHERE user_id = ? ORDER BY report_created DESC`,[user_id],(err, rows, fields) => {
+        if(!err){
+            res.send(rows);
+        } else {
+            console.log(err)
+        }
+    })
+})
+
 // Get all reports
 router.get('/reports',(req, res) => {
     db.query('SELECT report_id, report_title, report_detail, report_state, report_created FROM reports ORDER BY report_created DESC',(err, rows, fields) => {
