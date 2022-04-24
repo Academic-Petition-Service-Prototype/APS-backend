@@ -46,7 +46,7 @@ router.post('/getsubmitformsbyofficer',(req, res) => {
     FROM submitforms 
     INNER JOIN forms ON forms_id = forms.form_id
     JOIN users ON user_id = forms.users_id 
-    WHERE user_id = 5 ORDER BY submit_date DESC`,user_id,(err, rows, fields) => {
+    WHERE user_id = ? ORDER BY submit_date DESC`,user_id,(err, rows, fields) => {
         if(!err){
             res.send(rows);
         } else {
