@@ -29,7 +29,7 @@ router.post('/userrequests',(req, res) => {
     FROM requests
     INNER JOIN users
     ON requests.users_id = users.user_id
-    WHERE user_id = ? ORDER BY request_created DESC`,[agency_id],(err, rows, fields) => {
+    WHERE user_id = ? ORDER BY request_created DESC`,[user_id],(err, rows, fields) => {
         if(!err){
             res.send(rows);
         } else {
