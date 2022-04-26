@@ -36,14 +36,6 @@ router.post('/getusers',(req, res) => {
             }
         })
     }
-    // db.query('SELECT * FROM users',(err, rows, fields) => {
-    //     console.log(rows);
-    //     if(!err){
-    //         res.send(rows);
-    //     } else {
-    //         console.log(err)
-    //     }
-    // })
 })
 
 // Get users by id
@@ -150,7 +142,6 @@ router.patch('/users/:id', (req, res, next) => {
             }
         });
     } else {
-        console.log('test33333')
         let img = req.files.img;
         if(!errors){
             var filename1 = img.name

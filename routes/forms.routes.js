@@ -119,14 +119,7 @@ router.patch('/forms/:id', (req, res, next) => {
         db.query(`UPDATE forms SET ? WHERE form_id = ?`,[form_data,req.params.id],(err, result) => {
             if(!err){
                 console.log(result)
-                db.query(`UPDATE submitforms SET approval_order = ? WHERE forms_id = ?`,[approval_name,req.params.id],(err, result) => {
-                    if(!err){
-                        res.send('แก้ไขคำร้องใหม่สำเร็จ');
-                        console.log(result)
-                    } else {
-                        console.log(err)
-                    }
-                })
+                res.send('แก้ไขคำร้องใหม่สำเร็จ');
             } else {
                 console.log(err)
             }
