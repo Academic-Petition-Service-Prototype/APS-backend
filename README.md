@@ -1,3 +1,6 @@
+<p align="center">
+ <img width=400px height=300px src="img/RKR.png" alt="Project logo"></a>
+</p>
 <h3 align="center">Academic Petition Service Prototype</h3>
 
 <div align="center">

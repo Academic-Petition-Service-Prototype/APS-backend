@@ -136,7 +136,7 @@ router.post('/submitforms',(req, res) => {
     form_value = JSON.stringify(form_value);
     let approval_order = req.body.approval_order;
     approval_order = JSON.stringify(approval_order);
-    let submit_state = 1;
+    let submit_state = 0;
     let errors = false;
 
     if(!errors){

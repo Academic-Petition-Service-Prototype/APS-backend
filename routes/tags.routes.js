@@ -86,7 +86,6 @@ router.post('/tags',(req, res) => {
 
     if(tag_name.length === undefined){
         errors = true;
-        // res.send('Please fill your information');
         res.send('กรุณากรอกชื่อหมวดหมู่คำร้อง');
     }
 
