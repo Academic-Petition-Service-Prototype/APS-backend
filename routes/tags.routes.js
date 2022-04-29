@@ -20,7 +20,7 @@ router.get('/tags',(req, res) => {
 router.post('/tagsbyagency',(req, res) => {
     let agency_id = req.body.agency_id;
     
-    db.query(`SELECT tag_id, tag_name FROM tags 
+    db.query(`SELECT tag_id, tag_name, tag_created FROM tags 
     WHERE agencies_id = ?`,agency_id,(err, rows, fields) => {
         if(!err){
             console.log(rows);
