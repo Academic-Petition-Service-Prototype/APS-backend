@@ -44,7 +44,7 @@ router.get('/tags/:id',(req, res) => {
 })
 
 //update tags by id
-router.post('/tags/:id', (req, res, next) => {
+router.patch('/tags/:id', (req, res, next) => {
     let tag_id = req.params.id;
     let tag_name = req.body.tag_name;
     let errors = false;
