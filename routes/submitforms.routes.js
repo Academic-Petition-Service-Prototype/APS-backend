@@ -112,11 +112,17 @@ router.post('/approvepetition',(req, res) => {
     approval_order = JSON.stringify(approval_order);
     let submit_state = req.body.submit_state;
     let submit_refuse = req.body.submit_refuse;
+    let form_value = req.body.form_value;
+    if(typeof(form_value) != 'string'){
+        form_value = JSON.stringify(form_value);
+    }
+    
 
     let form_data = {
         approval_order: approval_order,
         submit_state: submit_state,
         submit_refuse: submit_refuse,
+        form_value: form_value,
     }
 
     db.query(`UPDATE submitforms SET ? WHERE submit_id = ?`,[form_data,submit_id],(err, rows, fields) => {
