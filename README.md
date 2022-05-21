@@ -31,7 +31,7 @@ npm run start
 node index.js
 ```
 
-## ⛏️ .ENV File Using <a name = "built_using"></a>
+## 🌲 .ENV File Using <a name = "built_using"></a>
 
     DB_HOST
     DB_USER
