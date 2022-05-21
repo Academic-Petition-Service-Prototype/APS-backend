@@ -31,6 +31,16 @@ npm run start
 node index.js
 ```
 
+## 🌲 .ENV File Using <a name = "built_using"></a>
+
+    DB_HOST
+    DB_USER
+    DB_PASSWORD
+    DB_NAME
+    DB_PORT
+    DB_TIMEZONE
+    URL_SERVER
+
 ## 🧰 Usage <a name="usage"></a>
 
 - Javascript
