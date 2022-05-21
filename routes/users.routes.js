@@ -65,7 +65,6 @@ router.get('/getchief/:id',(req, res) => {
 //update users by id
 router.patch('/users/:id', (req, res, next) => {
     let id = req.params.id;
-    // let email = req.body.email;
     let password = req.body.password;
     let role = req.body.role;
     let f_name = req.body.f_name;
@@ -75,11 +74,6 @@ router.patch('/users/:id', (req, res, next) => {
     let address = req.body.address;
     let agencies_id = req.body.agencies_id;
     let errors = false;
-
-    // if (email === undefined){
-    //     errors = true;
-    //     res.send('กรุณากรอกอีเมล');
-    // }
 
     if (!(req.files && req.files.img)){
 
